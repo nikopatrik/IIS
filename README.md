@@ -1,6 +1,6 @@
 # Jídelna: objednávka a rozvoz jídel
 
-## Instalace
+## Inštalácia
 Na vyvoj aplikácie je vytvorené docker prostredie pre beh databázy MySQL
 a PHP na webovom serveri Apache.
 
