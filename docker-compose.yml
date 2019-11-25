@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mysql:
+    build:
+      context: .
+      dockerfile: ./docker/mysql/Dockerfile
+    container_name: mysql-server
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpwd
+      - MYSQL_DATABASE=iisdb
+      - MYSQL_USER=iisuser
+      - MYSQL_PASSWORD=iispwd
+    ports:
+      - "3306:3306"
+  website:
+    container_name: web
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    volumes:
+      - ./src/:/var/www/html/
+    ports:
+      - 8000:80
+    depends_on:
+      - mysql
