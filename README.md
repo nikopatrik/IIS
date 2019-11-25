@@ -15,16 +15,16 @@ Následne možeme skontrolovať či nám beží daná aplikácia a teda vo webov
 ## Zmena inicializačného súboru databázy
 
 Dockerfile pre kontajner MySQL kopíruje zložku s incializačnými skriptami `db/` do adresára v kontajneri 
-`/docker-entrypoint-initdb.d/` a tieto skripti sa spušťajú pokažde ked sa vytvorí nový kontajner.
+`/docker-entrypoint-initdb.d/` a tieto skripty sa spúšťajú vždy ked sa vytvorí nový kontajner.
 
-Pozor!!! Incializácia databáze prebieh vždy len pri vytvorení kontajneru takže treba pri vypnutí compose 
+Pozor!!! Incializácia databáze prebieha vždy len pri vytvorení kontajneru takže treba pri vypnutí compose 
 príkazu vymazať aj vypínané kontajneri.
 Tieto kontajneri vymažeme nasledujúcím príkazom v kmeňovom adresári: 
 ```bash
 $ docker-compose down --remove-orphans
 ```
 
-Ak už došlo k zavolaniu príkzu `docker-compose down` vymažeme zostavajúce kontajneri nasledovne:
+Ak už došlo k zavolaniu príkazu `docker-compose down` vymažeme zostavajúce kontajneri nasledovne:
 ```bash
 $ docker ps -a # vypíše nám všetky kontajneri na danom systéme
 $ docker rm nazov_kontajneru_mysql nazov_kontajneru_website
