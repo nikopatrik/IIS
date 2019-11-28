@@ -3,8 +3,8 @@ DROP TABLE IF EXISTS driver_business;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS businesses;
 DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS drivers;
 DROP TABLE IF EXISTS users;
+
 
 CREATE TABLE businesses(
                            business_id INT PRIMARY KEY,
@@ -55,6 +55,7 @@ CREATE TABLE orders(
 CREATE TABLE order_items(
                             order_of_item INT,
                             item_in_order INT,
+                            number_of_items INT,
                             CONSTRAINT order_constraint
                                 FOREIGN KEY (order_of_item)
                                     REFERENCES orders (order_id),
@@ -75,4 +76,3 @@ CREATE TABLE driver_business(
                                     FOREIGN KEY (business)
                                         REFERENCES businesses(business_id)
 );
-
