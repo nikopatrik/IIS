@@ -35,7 +35,7 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.0/css/bootstrap.min.css" integrity="sha384-SI27wrMjH3ZZ89r4o+fGIJtnzkAnFs3E4qz9DIYioCQ5l9Rd/7UAa8DHcaL8jkWt" crossorigin="anonymous">
-    <link rel="shortcut icon" type="image/x-icon" href="img/papocadologo.png" />
+    <link rel="shortcut icon" type="image/x-icon" href="../templates/img/papocadologo.png" />
 
     <script src="https://kit.fontawesome.com/8200b23f0f.js" crossorigin="anonymous"></script>
 
@@ -46,7 +46,7 @@
 <nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> PaPoCADO </i>
+            <img src="../templates/img/papocadologo.png" width="50" height="50" alt=""> <i> PaPoCADO </i>
         </a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
