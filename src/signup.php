@@ -1,3 +1,62 @@
+<?php
+
+include_once "dbConfig.php";
+
+$email = $pass = $password_second = "";
+$status = -1;
+define("CUSTOMER", 'c');
+
+session_start();
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    $email = $_POST['email'];
+    $pass = $_POST['password'];
+    $password_second = $_POST['confirmPassword'];
+
+    # Check if fields are not empty
+    if(empty(trim($email)) || empty(trim($pass)) || empty(trim($password_second))){
+        $status = 0;    # No/wrong input
+    }else{
+        # Check if both passwords match
+        if(strcmp($pass, $password_second) != 0){
+            $status = 2;    # Passwords do not match
+        }else {
+            # Look up in database, if there is already user's email
+            $sqlLookUp = "SELECT user_email FROM users WHERE user_email = :email";
+            if($query = $pdo->prepare($sqlLookUp)){
+                $query->execute(['email' => $email]);
+                if($result = $query->fetchAll()){
+                    if(empty($result)){
+                        echo $result;
+                        $status = 4;    # Email already in database
+                    }
+                }else {     # FIXME     where to put else
+                    # Add user to database
+                    $sql = "INSERT INTO users (user_email, user_password, user_type) VALUES (:email, :pass, :type)";
+                    if ($query = $pdo->prepare($sql)) {
+                        $password_hashed = password_hash($pass, PASSWORD_BCRYPT);
+                        if ($query->execute(['email' => $email, 'pass' => $password_hashed, 'type' => CUSTOMER])) {
+                            $status = 1;
+                            echo "success";
+//                            header("Location: localhost:8000/login.php");   # FIXME
+                            exit();
+                        } else {
+                            error_log("Wrong INSERT query in signup.php file");
+                            $status = 3;    # Internal Error
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+?>
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -46,7 +105,7 @@
 <nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
     <div class="container">
         <a class="navbar-brand" href="#">
-            <img src="../templates/img/papocadologo.png" width="50" height="50" alt=""> <i> PaPoCADO </i>
+            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> PaPoCADO </i>
         </a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -61,7 +120,7 @@
             <div class="navbar-nav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="login.html">
+                        <a class="nav-link" href="login.php">
                             Prihlásiť sa
                         </a>
                     </li>
@@ -73,22 +132,37 @@
 
 <div class="container mt-5 " >
     <div class="d-flex row justify-content-center">
-        <form style="min-width: 400px">
+        <form action="signup.php" method="post" style="min-width: 400px">
             <div class="form-group">
-                <label for="exampleInputEmail2">Email</label>
-                <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp">
+                <label for="registrationEmail">Email</label>
+                <input type="email" name="email" class="form-control" id="registrationEmail" aria-describedby="emailHelp">
 
             </div>
             <div class="form-group">
                 <label for="registrationPassword">Heslo</label>
-                <input type="password" class="form-control" id="registrationPassword">
+                <input type="password" name="password" class="form-control" id="registrationPassword">
             </div>
             <div class="form-group">
                 <label for="registrationConfirmPassword">Zopakujte Heslo</label>
-                <input type="password" class="form-control" id="registrationConfirmPassword">
+                <input type="password" name="confirmPassword" class="form-control" id="registrationConfirmPassword">
             </div>
 
-            <button type="submit" style="vertical-align: center" class="btn btn-primary">Submit</button>
+            <div class="form-group form-check d-flex justify-content-between">
+                <div>
+                    <button type="submit" style="vertical-align: center" class="btn btn-primary">Submit</button>
+                </div>
+                <?php
+                    if($status == 0){
+                        echo "<strong style='color: red'>Vyplňte všetky údaje</strong>";
+                    }elseif($status == 2){
+                        echo "<strong style='color: red'>Heslá sa nezhodujú</strong>";
+                    }elseif($status == 3){
+                        echo "<strong style='color: red'>Interná chyba, skúste znova</strong>";
+                    }elseif($status == 4){
+                        echo "<strong style='color: red'>Email je už registrovaný</strong>";
+                    }
+                ?>
+            </div>
         </form>
     </div>
 

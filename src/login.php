@@ -1,3 +1,38 @@
+<?php
+require_once "dbConfig.php";
+
+$email = $password = "";
+$status = -1;
+
+if($_SERVER["REQUEST_METHOD"] == "POST"){
+
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+
+    if(empty(trim($email)) || empty(trim($password))){
+        $status = 0;
+    }else{
+        $sql = "SELECT * FROM users WHERE user_email = :email";
+        if($query = $pdo->prepare($sql)){
+            $query->execute(['email' => $email]);
+            if($result = $query->fetch()) {
+                if (password_verify($password, $result['user_password'])) {
+                    $_SESSION['email'] = $result['user_email'];
+                    $status = 1;        # FIXME delete this
+                } else {
+                    $status = 0;
+                }
+            }else{
+                $status = 0;
+            }
+        }
+    }
+}
+
+?>
+
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -61,7 +96,7 @@
             <div class="navbar-nav">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                    <a class="nav-link" href="signup.html">
+                    <a class="nav-link" href="signup.php">
                         Registrovať sa
                     </a>
                     </li>
@@ -73,27 +108,36 @@
 
 <div class="container mt-5 " >
     <div class="d-flex row justify-content-center">
-    <form style="min-width: 400px">
+    <form action="login.php" method="post" style="min-width: 400px">
         <div class="form-group">
             <label for="exampleInputEmail1">Email</label>
-            <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+            <input type="email" name="email" class="form-control" id="loginEmail" aria-describedby="emailHelp">
 
         </div>
         <div class="form-group">
             <label for="exampleInputPassword1">Heslo</label>
-            <input type="password" class="form-control" id="exampleInputPassword1">
-            <small id="pwdHelp" class="form-text text-muted">Vaša heslo nikdy s nikým nezdieľajte.</small>
+            <input type="password" name="password" class="form-control" id="loginPassword">
+            <small id="pwdHelp" class="form-text text-muted">Vaše heslo nikdy s nikým nezdieľajte.</small>
         </div>
-        <div class="form-group form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Zapamätať si ma</label>
+        <div class="form-group form-check d-flex justify-content-between">
+            <div>
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Zapamätať si ma</label>
+            </div>
+        <?php
+        if($status == 0) {
+            echo "<strong style='color: red'>Nesprávne heslo alebo email</strong>";
+        }else{
+            echo $status;   # TODO
+        }
+        ?>
         </div>
         <button type="submit" style="vertical-align: center" class="btn btn-primary">Submit</button>
     </form>
     </div>
 
     <div class="d-flex row justify-content-center" >
-            <a class="m-4" href="signup.html"> Vytvoriť účet</a>
+            <a class="m-4" href="signup.php"> Vytvoriť účet</a>
             <a class="m-4" href="forgottenpassword.html"> Zapomenuté heslo</a>
     </div>
 
