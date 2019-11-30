@@ -43,34 +43,9 @@
     <title>PaPoCADO!</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> PaPoCADO </i>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="form-inline mx-auto">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
-            </form>
-            <div class="navbar-nav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="signup.html">
-                            Registrovať sa
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
+<?php
+include "navigation-bar.php";
+?>
 <div class="jumbotron">
     <h1 class="display-6">Ďakujeme za nákup!</h1>
     <p class="lead">Ďakujeme za nákup! Na Vašej objednávke usiľovne pracujeme.</p>
