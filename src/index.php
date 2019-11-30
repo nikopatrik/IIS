@@ -65,24 +65,24 @@
                         Meno Uživateľa
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="profile.html">Profil</a>
-                        <a class="dropdown-item" href="orders.html">Moje objednávky</a>
+                        <a class="dropdown-item" href="profile.php">Profil</a>
+                        <a class="dropdown-item" href="orders.php">Moje objednávky</a>
                         <a class="dropdown-item" href="#">Odhlásiť sa</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="shoppingcart.html">
+                    <a class="nav-link" href="shoppingcart.php">
                         <i class="fas fa-shopping-cart"></i>
                      </a>
                 </li>
 
                 <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="login.html">-->
+                    <!--<a class="nav-link" href="login.php">-->
                         <!--Prihlásiť sa-->
                     <!--</a>-->
                 <!--</li>-->
                 <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="signup.html">-->
+                    <!--<a class="nav-link" href="signup.php">-->
                         <!--Registrovať sa-->
                     <!--</a>-->
                 <!--</li>-->
@@ -93,20 +93,31 @@
 </nav>
 
 <div class="container mt-3" >
-
     <div class="row">
         <!--template to fill in with database info -->
-        <div class="col3-sm">
-            <div class="card m-1" style="width: 16rem;">
-                <a class="clickable-card" href="offer.html" >
-                <img class="card-image-same-size" src="https://img.amici.cz/products/thumb/image-000652-1565943225.jpg" class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Amici</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <?php
+        require_once 'dbConfig.php';
+        foreach ($pdo->query("SELECT * FROM businesses") as $row){
+            $time=strtotime($row['business_closing_time']);
+            if(empty($row['business_picture_path']))
+                $picture ='img\default.jpg';
+            else
+                $picture =$row['business_picture_path'];
+
+            echo "<div class=\"col3-sm\">
+            <div class=\"card m-1\" style=\"width: 16rem;\">
+                <a class=\"clickable-card\" href=\"offer.php?business=".$row['business_name']."&type=all\" >
+                <img class=\"card-image-same-size\" src=\"".$picture."\" class=\"card-img-top\" alt=\"...\">
+                <div class=\"card-body\">
+                    <h5 class=\"card-title\">".$row['business_name']."</h5>
+                <p class=\"card-text\">Posledné objednávky: ".date("H:i",$time)."</p>
                 </div>
                 </a>
             </div>
-        </div>
+        </div>";
+        }
+        ?>
+
 
 </div>
 
