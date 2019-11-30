@@ -111,10 +111,13 @@ if(!empty($type))
 $stmt = $pdo->prepare('SELECT * FROM businesses WHERE business_name=?');
 $stmt->execute([$_SESSION['requested_restaurant']]);
 $business = $stmt->fetch();
-
+if(empty($business['business_picture_path']))
+    $picture ='img\default.jpg';
+else
+    $picture =$business['business_picture_path'];
 
 echo "
-    <div class=\"jumbotron jumbotron-fluid restaurant-name\" style=\"background: url(".$business['business_picture_path'].") center center / cover no-repeat\">
+    <div class=\"jumbotron jumbotron-fluid restaurant-name\" style=\"background: url(".$picture.") center center / cover no-repeat\">
         <div class=\"container \">
             <h1 class=\"display-4\" >".$business['business_name']."</h1>
             <p class=\"lead\" >Posledné objednávky: ".date("H:i",strtotime($business['business_closing_time']))."<br>".$business['business_street']." ".$business['business_street_number']." ".$business['business_zip']." ".$business['business_city']."</p>

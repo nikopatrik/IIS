@@ -4,38 +4,38 @@ insert into businesses ( business_id, business_name, business_city, business_str
 insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time,business_picture_path) values (3, 'AMICI'        , 'Tišnov'  , 'Hezká', '8'      ,'64300', '21:00:00','img/amici.jpg');
 insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time,business_picture_path) values (4, 'Roburrito'    , 'Olomouc' , 'Univerzitní','54','61540', '20:40:00','img/roburrito.jpeg');
 
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (1, 'Hamburger', 'Hovädzie mäso, Žemľa, Olej, Cibuľa',             '6,50',     'O' ,'N' ,NULL, 1);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (2, 'Cheesburger', 'Hovädzie mäso, Žemľa, Olej, Cibuľa, Syr',      '9,30',     'D' ,'N' ,200, 1);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (3, 'Chilli Burger', 'Hovädzie mäso, Žemľa, Olej, Cibuľa,Chilli',  '9,50',     'D' ,'N' ,100, 1);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (4, 'Veggie BURGER', 'Soja,Žemľa, Olej, Cibuľa,Chilli,Tajna prisada', '15,50', 'O' ,'V' ,NULL, 1);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (5, 'Quatro formagi Burger', 'Zemla, 4 druhy syra,',               '4,20',     'O' ,'W' ,NULL, 1);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (1, 'Hamburger', 'Hovädzie mäso, Žemľa, Olej, Cibuľa',             '6.50',     'O' ,'N' ,NULL, 1);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (2, 'Cheesburger', 'Hovädzie mäso, Žemľa, Olej, Cibuľa, Syr',      '9.30',     'D' ,'N' ,200, 1);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (3, 'Chilli Burger', 'Hovädzie mäso, Žemľa, Olej, Cibuľa,Chilli',  '9.50',     'D' ,'N' ,100, 1);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (4, 'Veggie BURGER', 'Soja,Žemľa, Olej, Cibuľa,Chilli,Tajna prisada', '15.50', 'O' ,'V' ,NULL, 1);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (5, 'Quatro formagi Burger', 'Zemla, 4 druhy syra,',               '4.20',     'O' ,'W' ,NULL, 1);
 
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (6, 'Avengers pizza', 'Cesto, Rajcina, Orechy ',                   '5,20',     'O', 'V',NULL,4);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (7, 'Party Pizza', 'Cesto, Rajcina, Orechy, Karfiol',              '3,20',     'O', 'V',NULL,4);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (8, 'Burrito Extra', 'Placka,Kuracie maso,Zelenia',                '4,30',     'D', 'N',120,4);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (10, 'Burrito Chilli', 'Placka,Kuracie maso,Zelenia, Chilli',       '12,20'    ,'D', 'N',130,4);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (11, 'Burrito Party', 'Placka,Kuracie maso,Zelenia, Party Ingrediencia', '4,40','D','N',150,4);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (6, 'Avengers pizza', 'Cesto, Rajcina, Orechy ',                   '5.20',     'O', 'V',NULL,4);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (7, 'Party Pizza', 'Cesto, Rajcina, Orechy, Karfiol',              '3.20',     'O', 'V',NULL,4);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (8, 'Burrito Extra', 'Placka,Kuracie maso,Zelenia',                '4.30',     'D', 'N',120,4);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (10, 'Burrito Chilli', 'Placka,Kuracie maso,Zelenia, Chilli',       '12.20'    ,'D', 'N',130,4);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (11, 'Burrito Party', 'Placka,Kuracie maso,Zelenia, Party Ingrediencia', '4.40','D','N',150,4);
 
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (12, 'BigMac', 'Hovädzie mäso, Žemľa, Olej, Cibuľa',               '6,60',     'O' ,'N' ,NULL, 2);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (13, 'McRoyale','Hovädzie mäso, Žemľa, Olej, Cibuľa, Royale Sauce','6,50',     'O' ,'N' ,NULL, 2);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (14, 'Hranolky', 'Zemiaky Olej',                                   '2,50',     'O' ,'V' ,NULL, 2);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (15, 'McWrap', 'Vajce, Olej, Tortila, Cibuľa, Zelenina',    '6,50',     'O' ,'W' ,NULL, 2);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (16, 'Kyblik 5ks', 'Kuracie mäso, Olej',                           '4,40',     'D' ,'N' ,150, 2);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (17, 'Kyblik 10ks', 'Kuracie mäso, Olej',                          '7,50',     'D' ,'N' ,200, 2);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (12, 'BigMac', 'Hovädzie mäso, Žemľa, Olej, Cibuľa',               '6.60',     'O' ,'N' ,NULL, 2);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (13, 'McRoyale','Hovädzie mäso, Žemľa, Olej, Cibuľa, Royale Sauce','6.50',     'O' ,'N' ,NULL, 2);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (14, 'Hranolky', 'Zemiaky Olej',                                   '2.50',     'O' ,'V' ,NULL, 2);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (15, 'McWrap', 'Vajce, Olej, Tortila, Cibuľa, Zelenina',    '6.50',     'O' ,'W' ,NULL, 2);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (16, 'Kyblik 5ks', 'Kuracie mäso, Olej',                           '4.40',     'D' ,'N' ,150, 2);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (17, 'Kyblik 10ks', 'Kuracie mäso, Olej',                          '7.50',     'D' ,'N' ,200, 2);
 
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (18, 'Grinder', 'Placka,Hovädzie mäso,Zelenia',            '5,50'      ,'O','N',NULL,3);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (19, 'Zinger', 'Placka,Kuracie mäso,Zelenia',              '4,60'      ,'D','N',100,3);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (20, 'Chicken Chorizo', 'Chorizo salama, Cesto, Syr, Olivy','7,30'     ,'D','N',200,3);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (21, 'Quatro Americano', 'Kuracie mäso, Zelenina, Syr, Olivy','5,30'   ,'O','N',NULL,3);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (22, 'Gucci Flaco', 'Tajomstvo, Šéfkuchára','12,40'                    ,'D','W',200,3);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (18, 'Grinder', 'Placka,Hovädzie mäso,Zelenia',            '5.50'      ,'O','N',NULL,3);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (19, 'Zinger', 'Placka,Kuracie mäso,Zelenia',              '4.60'      ,'D','N',100,3);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (20, 'Chicken Chorizo', 'Chorizo salama, Cesto, Syr, Olivy','7.30'     ,'D','N',200,3);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (21, 'Quatro Americano', 'Kuracie mäso, Zelenina, Syr, Olivy','5.30'   ,'O','N',NULL,3);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (22, 'Gucci Flaco', 'Tajomstvo, Šéfkuchára','12.40'                    ,'D','W',200,3);
 
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (23, 'Cola',NULL,'1,30','O' ,'D' ,NULL, 1);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (24, 'Voda', NULL,'1,00','O' ,'D' ,NULL, 1);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (25, 'Fanta',NULL, '1,10','O' ,'D' ,NULL, 2);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (26, 'Sprite', NULL,'1,10','O' ,'D' ,NULL, 2);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (27, 'Káva', NULL,'3,30','O' ,'D' ,NULL, 3);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (28, 'Čaj', NULL,'0,50','O' ,'D' ,NULL, 3);
-insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (29, 'Pepsi',NULL, '1,20','O' ,'D' ,NULL, 3);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (23, 'Cola',NULL,'1.30','O' ,'D' ,NULL, 1);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (24, 'Voda', NULL,'1.00','O' ,'D' ,NULL, 1);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (25, 'Fanta',NULL, '1.10','O' ,'D' ,NULL, 2);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (26, 'Sprite', NULL,'1.10','O' ,'D' ,NULL, 2);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (27, 'Káva', NULL,'3.30','O' ,'D' ,NULL, 3);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (28, 'Čaj', NULL,'0.50','O' ,'D' ,NULL, 3);
+insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (29, 'Pepsi',NULL, '1.20','O' ,'D' ,NULL, 3);
 
 insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('achaney0@squarespace.com', 'f91IX3pXtJWM', 'C','Nikolas Patrik','904032213');
 insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('ffoottit1@ftc.gov', 'GI7H1fihs3J', 'O','Róbert Hubinák','9036789543');
