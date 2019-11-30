@@ -1,7 +1,8 @@
-insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time) values (1, 'Bucheck'      , 'Brno'    , 'Grohova', '14'   ,'62800', '23:11:00');
-insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time) values (2, 'McDonalds'    , 'Brno'    , 'Česká', '15'     ,'64200', '23:41:00');
-insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time) values (3, 'AMICI'        , 'Tišnov'  , 'Hezká', '8'      ,'64300', '21:00:00');
-insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time) values (4, 'Roburrito'    , 'Olomouc' , 'Univerzitní','54','61540', '20:40:00');
+
+insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time,business_picture_path) values (1, 'Bucheck'      , 'Brno'    , 'Grohova', '14'   ,'62800', '23:11:00','img/bucheck.jpg');
+insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time,business_picture_path) values (2, 'McDonalds'    , 'Brno'    , 'Česká', '15'     ,'64200', '23:41:00','img/mcdonalds.jpg');
+insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time,business_picture_path) values (3, 'AMICI'        , 'Tišnov'  , 'Hezká', '8'      ,'64300', '21:00:00','img/amici.jpg');
+insert into businesses ( business_id, business_name, business_city, business_street, business_street_number, business_zip, business_closing_time,business_picture_path) values (4, 'Roburrito'    , 'Olomouc' , 'Univerzitní','54','61540', '20:40:00','img/roburrito.jpeg');
 
 insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (1, 'Hamburger', 'Hovädzie mäso, Žemľa, Olej, Cibuľa',             '6,50',     'O' ,'N' ,NULL, 1);
 insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (2, 'Cheesburger', 'Hovädzie mäso, Žemľa, Olej, Cibuľa, Syr',      '9,30',     'D' ,'N' ,200, 1);
@@ -36,16 +37,16 @@ insert into items (item_id, item_name, item_description, item_price, item_catego
 insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (28, 'Čaj', NULL,'0,50','O' ,'D' ,NULL, 3);
 insert into items (item_id, item_name, item_description, item_price, item_category, item_type, item_limit, item_business) values (29, 'Pepsi',NULL, '1,20','O' ,'D' ,NULL, 3);
 
-insert into users (user_email, user_password, user_type) values ('achaney0@squarespace.com', 'f91IX3pXtJWM', 'C');
-insert into users (user_email, user_password, user_type) values ('ffoottit1@ftc.gov', 'GI7H1fihs3J', 'O');
-insert into users (user_email, user_password, user_type) values ('aboarer2@shinystat.com', '7RYWo9ZzS', 'D');
-insert into users (user_email, user_password, user_type) values ('amelmore3@about.me', '59aCD4Q', 'D');
-insert into users (user_email, user_password, user_type) values ('klonghorne4@issuu.com', 'b5ChaWBlLcyo', 'D');
-insert into users (user_email, user_password, user_type) values ('chexter5@yandex.ru', 'M8bHUkB', 'C');
-insert into users (user_email, user_password, user_type) values ('ndomek6@deliciousdays.com', 'MW31fE', 'C');
-insert into users (user_email, user_password, user_type) values ('eastbery7@cbc.ca', 'zPqinC5NbPQ', 'C');
-insert into users (user_email, user_password, user_type) values ('admin@admin.com', 'admin', 'A');
-insert into users (user_email, user_password, user_type) values ('dfarre9@dion.jp', 'DTAjuWf2Jlzz', 'O');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('achaney0@squarespace.com', 'f91IX3pXtJWM', 'C','Nikolas Patrik','904032213');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('ffoottit1@ftc.gov', 'GI7H1fihs3J', 'O','Róbert Hubinák','9036789543');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('aboarer2@shinystat.com', '7RYWo9ZzS', 'D','Matej Janček','940329393');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('amelmore3@about.me', '59aCD4Q', 'D','Lukáš Chmelo','904654420');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('klonghorne4@issuu.com', 'b5ChaWBlLcyo', 'D', 'Jozef Novák','653908453');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('chexter5@yandex.ru', 'M8bHUkB', 'C', 'Peter Ondrík','980789567');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('ndomek6@deliciousdays.com', 'MW31fE', 'C', 'Vlasto Depeš','234967098');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('eastbery7@cbc.ca', 'zPqinC5NbPQ', 'C', 'Dano Drevo','560432098');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('admin@admin.com', 'admin', 'A', 'Starý Jano','955908344');
+insert into users (user_email, user_password, user_type, user_name, user_phone_number) values ('dfarre9@dion.jp', 'DTAjuWf2Jlzz', 'O','Onder Opic','2908796432');
 
 
 insert into orders (order_id, order_date, order_time, order_price, order_owner) values (1, '2017-02-19', '3:44:00', 55, 'chexter5@yandex.ru');
