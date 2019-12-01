@@ -75,6 +75,7 @@ include "navigation-bar.php";
                 <input type="text" name="phone_number" value="'.$user_data['user_phone_number'].'" minlength="9" maxlength="13" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" class="form-control mb-2" id="phone_number" placeholder="+421 900 111 222" required>'; ?>
 
             </div>
+
             <div class="form-group" class="was-validated">
                 <label for="formGroupExampleInput2">Adresa</label>
                 <?php echo '
@@ -93,6 +94,7 @@ include "navigation-bar.php";
                 <input type="text" minlength="5" value="'.$user_data['user_zip_code'].'" pattern="[0-9]+" maxlength="5" name="zip_code"  class="form-control" id="zip_code" required>'; ?>
                 <div class="valid-feedback"></div>
                 <div class="invalid-feedback"></div>
+
             </div>
             <div class="d-flex justify-content-between">
                 <a class="btn btn-light" href="shoppingcart.php">Zpäť do košíku</a>
