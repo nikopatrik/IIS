@@ -59,7 +59,7 @@
        
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="profile.php">Profil</a>
-                            <a class="dropdown-item" href="orders.php">Moje objednávky</a>';
+                            <a class="dropdown-item" href="profile.php#orders">Moje objednávky</a>';
 
        if($is_driver) { echo '<a class="dropdown-item" href="driver.php">Vodič</a>'; }
        if($is_operator) { echo '<a class="dropdown-item" href="operator.php">Operátor</a>'; }
