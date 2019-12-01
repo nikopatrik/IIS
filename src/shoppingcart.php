@@ -261,7 +261,7 @@ function print_cart_item($item_id, $item_name, $item_desc, $item_price, $item_im
                         Celková suma <b id="total"><?php echo number_format($total, 2) . " €" ?></b>
                     </div>
 
-                    <button type="submit" class="btn btn-primary pull-right">Pokračovať v objednávke</button>
+                    <a href="validcheck.php" class="btn btn-primary pull-right">Pokračovať v objednávke</a>
 
                 </div>
             </div>
