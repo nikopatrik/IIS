@@ -1,7 +1,12 @@
 <?php
-include_once "dbConfig.php";
-session_start();
-$_SESSION['email'] = 'aboarer2@shinystat.com';
+
+$useremail = 'aboarer2@shinystat.com';
+require_once 'dbConfig.php';
+
+$user_name_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');
+$user_name_stmt->execute([$useremail]);
+$user_data = $user_name_stmt->fetch();
+
 ?>
 
 <!doctype html>
@@ -53,51 +58,41 @@ $_SESSION['email'] = 'aboarer2@shinystat.com';
 include "navigation-bar.php";
 ?>
 
-<?php
-
-
-if(isset($_SESSION['email'])) {
-    $user_info = $pdo->prepare("SELECT user_email, user_name, user_phone_number, user_street, user_street_number, user_city, user_zip_code
-                                          FROM users WHERE user_email=?");
-    $user_info->execute([$_SESSION['email']]);
-    $user = $user_info->fetch();
-}
-
-$email = isset($user['user_email'])? $user['user_email'] : "";
-$name = isset($user['user_name'])? $user['user_name'] : "";
-$phone_number = isset($user['user_phone_number'])? $user['user_phone_number'] : "";
-$street = isset($user['user_street'])? $user['user_street'] : "";
-$street_number = isset($user['user_street_number'])? $user['user_street_number'] : "";
-$city = isset($user['user_city'])? $user['user_city'] : "";
-$zip_code = isset($user['user_zip_code'])? $user['user_zip_code'] : "";
-
-
-?>
 <div class="container mt-3">
     <div class="d-flex justify-content-center">
-        <form style="width: 400px" method="post" action="validateorder.php">
+
+        <form style="width: 400px" action="validateorder.php"  method="POST" class="was-validated">
             <div class="form-group">
                 <label for="name">Meno a Priezvisko</label>
-                <input type="text" class="form-control mb-2" name="name"
-                       placeholder="Meno Uživateľa" value="<?php echo $name; ?>" id="name">
-                <label for="email">Email</label>
-                <input type="text" class="form-control mb-2" name="email"
-                       placeholder="menouzivatela@gmail.com" value="<?php echo $email; ?>" id="email">
-                <label for="phone_number">Telefónne číslo </label>
-                <input type="text" class="form-control mb-2" name="phone_number"
-                       placeholder="+421 902 222 000" value="<?php echo $phone_number; ?>" id="phone_number">
+                <?php echo '
+                <input type="text" name="name" value="'.$user_data['user_name'].'" class="form-control mb-2"  pattern="[A-Za-z\s\u0080-\u9fff]+" id="name" placeholder="Meno Uživateľa" minlength="2"  maxlength="100" required>'; ?>
+                <label for="formGroupExampleInput3">Email</label>
+                <?php echo '
+                <input type="email" name="email" class="form-control mb-2" maxlength="100" id="email" value="'.$user_data['user_email'].'" placeholder="Email uživateľa" required>'; ?>
+                <label for="formGroupExampleInput4">Telefónne číslo </label>
+                <?php
+                echo '
+                <input type="text" name="phone_number" value="'.$user_data['user_phone_number'].'" minlength="9" maxlength="13" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" class="form-control mb-2" id="phone_number" placeholder="+421 900 111 222" required>'; ?>
 
             </div>
-            <div class="form-group">
-                <label for="street">Adresa</label>
-                <input type="text" class="form-control my-2" name="street"
-                       placeholder="Ulica" value="<?php echo $street; ?>" id="street">
-                <input type="text" class="form-control my-2"
-                       placeholder="Číslo popisné" value="<?php echo $street_number; ?>" id="street_number">
-                <input type="text" class="form-control my-2" name="city"
-                       placeholder="Mesto" value="<?php echo $city; ?>" id="city">
-                <input type="text" class="form-control my-2" name="zip_code"
-                       placeholder="PSČ" value="<?php echo $zip_code; ?>" id="zip_code">
+            <div class="form-group" class="was-validated">
+                <label for="formGroupExampleInput2">Adresa</label>
+                <?php echo '
+                <input type="text" value="'.$user_data['user_street'].'" name="street" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="street" minlength="2" maxlength="100" required>';?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" value="'.$user_data['user_street_number'].'" pattern="(([0-9])+([/][0-9]+)?)" name="street_number" class="form-control" id="street_number" maxlength="10" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" name="city" value="'.$user_data['user_city'].'" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="city" maxlength="100" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" minlength="5" value="'.$user_data['user_zip_code'].'" pattern="[0-9]+" maxlength="5" name="zip_code"  class="form-control" id="zip_code" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
             </div>
             <div class="d-flex justify-content-between">
                 <a class="btn btn-light" href="shoppingcart.php">Zpäť do košíku</a>
