@@ -1,3 +1,12 @@
+<?php
+$useremail = 'aboarer2@shinystat.com';
+require_once 'dbConfig.php';
+
+$user_name_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');
+$user_name_stmt->execute([$useremail]);
+$user_data = $user_name_stmt->fetch();
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -48,33 +57,42 @@ include "navigation-bar.php";
 ?>
 <div class="container mt-3">
     <div class="d-flex justify-content-center">
-        <form style="width: 400px">
+        <form style="width: 400px" action="validateorder.php"  method="POST" class="was-validated">
             <div class="form-group">
                 <label for="formGroupExampleInput">Meno a Priezvisko</label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput"
-                       placeholder="Meno Uživateľa">
+                <?php echo '
+                <input type="text" name="new_name" value="'.$user_data['user_name'].'" class="form-control mb-2"  pattern="[A-Za-z\s\u0080-\u9fff]+" id="inlineFormInput" placeholder="Meno Uživateľa" minlength="2"  maxlength="100" required>'; ?>
                 <label for="formGroupExampleInput3">Email</label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput3"
-                       placeholder="menouzivatela@gmail.com">
+                <?php echo '
+                <input type="email" name="new_email" class="form-control mb-2" maxlength="100" id="inlineFormInput2" value="'.$user_data['user_email'].'" placeholder="Email uživateľa" required>'; ?>
                 <label for="formGroupExampleInput4">Telefónne číslo </label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput4"
-                       placeholder="+421 902 222 000">
+                <?php
+                echo '
+                <input type="text" name="new_phone_number" value="'.$user_data['user_phone_number'].'" minlength="9" maxlength="13" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" class="form-control mb-2" id="inlineFormInput3" placeholder="+421 900 111 222" required>'; ?>
 
             </div>
-            <div class="form-group">
+            <div class="form-group" class="was-validated">
                 <label for="formGroupExampleInput2">Adresa</label>
-                <input type="text" class="form-control my-2" id="formGroupExampleInput2"
-                       placeholder="Ulica">
-                <input type="text" class="form-control my-2"
-                       placeholder="Číslo popisné">
-                <input type="text" class="form-control my-2"
-                       placeholder="Mesto">
-                <input type="text" class="form-control my-2"
-                       placeholder="PSČ">
+                <?php echo '
+                <input type="text" value="'.$user_data['user_street'].'" name="new_street" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="street" minlength="2" maxlength="100" required>';?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" value="'.$user_data['user_street_number'].'" pattern="(([0-9])+([/][0-9]+)?)" name="new_street_number" class="form-control" id="streetnumber" maxlength="10" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" name="new_city" value="'.$user_data['user_city'].'" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="city" maxlength="100" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" minlength="5" value="'.$user_data['user_zip_code'].'" pattern="[0-9]+" maxlength="5" name="new_zip"  class="form-control" id="zip" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
             </div>
             <div class="d-flex justify-content-between">
-                <a class="btn btn-light" href="shoppingcart.html">Zpäť do košíku</a>
-                <a type="submit" class="btn btn-primary" href="validateorder.html">Pokračovať</a>
+                <a class="btn btn-light" href="shoppingcart.php">Zpäť do košíku</a>
+                <a type="submit" class="btn btn-primary" href="validateorder.php">Pokračovať</a>
             </div>
         </form>
     </div>
