@@ -92,7 +92,7 @@ $zip_code = isset($user['user_zip_code'])? $user['user_zip_code'] : "";
                 <label for="street">Adresa</label>
                 <input type="text" class="form-control my-2" name="street"
                        placeholder="Ulica" value="<?php echo $street; ?>" id="street">
-                <input type="text" class="form-control my-2"
+                <input type="text" class="form-control my-2" name="street_number"
                        placeholder="Číslo popisné" value="<?php echo $street_number; ?>" id="street_number">
                 <input type="text" class="form-control my-2" name="city"
                        placeholder="Mesto" value="<?php echo $city; ?>" id="city">
