@@ -135,3 +135,10 @@ insert into driver_business (driver, business) values ('klonghorne4@issuu.com', 
 insert into driver_business (driver, business) values ('klonghorne4@issuu.com', 4);
 insert into driver_business (driver, business) values ('aboarer2@shinystat.com', 2);
 insert into driver_business (driver, business) values ('aboarer2@shinystat.com', 1);
+
+insert into user_item(user_id, item_id_cart, cart_quantity) values ('aboarer2@shinystat.com', 11, 3);
+insert into user_item(user_id, item_id_cart, cart_quantity) values ('aboarer2@shinystat.com', 13, 3);
+insert into user_item(user_id, item_id_cart, cart_quantity) values ('aboarer2@shinystat.com', 1, 3);
+insert into user_item(user_id, item_id_cart, cart_quantity) values ('aboarer2@shinystat.com', 15, 3);
+insert into user_item(user_id, item_id_cart, cart_quantity) values ('aboarer2@shinystat.com', 20, 3);
+insert into user_item(user_id, item_id_cart, cart_quantity) values ('aboarer2@shinystat.com', 4, 3);
