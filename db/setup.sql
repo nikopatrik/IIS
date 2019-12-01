@@ -39,11 +39,11 @@ CREATE TABLE users(
                       user_email VARCHAR(100) PRIMARY KEY,
                       user_password VARCHAR(60) NOT NULL,
                       user_name VARCHAR (100),
-                      user_phone_number VARCHAR(100),
+                      user_phone_number VARCHAR(20),
                       user_street VARCHAR(100),
-                      user_street_number INT,
+                      user_street_number VARCHAR (10),
                       user_city VARCHAR(100),
-                      user_zip_code INT,
+                      user_zip_code VARCHAR (5),
                       user_type VARCHAR (1),
                       CHECK (user_type IN ('A','O','D','C')), -- Admin Operator Driver Customer
                       CONSTRAINT email_constraint CHECK ( REGEXP_LIKE( user_email, '.+@(.+\..+)+' ))
@@ -56,9 +56,17 @@ CREATE TABLE orders(
                        order_price INT,
                        order_state BOOLEAN,
                        order_owner VARCHAR (100),
+                       order_driver VARCHAR (100),
+                       order_street VARCHAR(100),
+                       order_street_number VARCHAR (10),
+                       order_city VARCHAR(100),
+                       order_zip_code VARCHAR (5),
 
                        CONSTRAINT order_owner_constraint
                            FOREIGN KEY (order_owner)
+                               REFERENCES users(user_email),
+                        CONSTRAINT order_driver_constraint
+                           FOREIGN KEY (order_driver)
                                REFERENCES users(user_email)
 );
 
