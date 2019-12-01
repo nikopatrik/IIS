@@ -117,7 +117,7 @@ while ($item = $stmt->fetch()){
                     <p class=\"card-text\"><strong>".$item['item_price']." €</strong></p>
                 </div>
             </div>
-            <a href=\"shoppingcart.html?id=8abcfaed5 \" class=\"btn btn-primary align-self-end\">Vybrať</a>
+            <a href=\"shoppingcart.php?item_id=".$item['item_id']." \" class=\"btn btn-primary align-self-end\">Vybrať</a>
         </div>
     </div>
 </div>
