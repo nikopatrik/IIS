@@ -55,7 +55,7 @@ include "navigation-bar.php";
         foreach ($pdo->query("SELECT * FROM businesses") as $row){
             $time=strtotime($row['business_closing_time']);
             if(empty($row['business_picture_path']))
-                $picture ='img\default.jpg';
+                $picture ='img/default.jpg';
             else
                 $picture =$row['business_picture_path'];
 

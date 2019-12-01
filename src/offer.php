@@ -72,7 +72,7 @@ $stmt = $pdo->prepare('SELECT * FROM businesses WHERE business_name=?');
 $stmt->execute([$_SESSION['requested_restaurant']]);
 $business = $stmt->fetch();
 if(empty($business['business_picture_path']))
-    $picture ='img\default.jpg';
+    $picture ='img/default.jpg';
 else
     $picture =$business['business_picture_path'];
 
