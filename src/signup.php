@@ -8,50 +8,51 @@ define("CUSTOMER", 'c');
 
 session_start();
 
-if($_SERVER["REQUEST_METHOD"] == "POST"){
+if($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $email = $_POST['email'];
     $pass = $_POST['password'];
     $password_second = $_POST['confirmPassword'];
 
     # Check if fields are not empty
-    if(empty(trim($email)) || empty(trim($pass)) || empty(trim($password_second))){
+    if (empty(trim($email)) || empty(trim($pass)) || empty(trim($password_second))) {
         $status = 0;    # No/wrong input
-    }else{
+    } else {
         # Check if both passwords match
-        if(strcmp($pass, $password_second) != 0){
+        if (strcmp($pass, $password_second) != 0) {
             $status = 2;    # Passwords do not match
-        }else {
+        } else {
             # Look up in database, if there is already user's email
             $sqlLookUp = "SELECT user_email FROM users WHERE user_email = :email";
-            if($query = $pdo->prepare($sqlLookUp)){
+            if($query = $pdo->prepare($sqlLookUp)) {
                 $query->execute(['email' => $email]);
-                if($result = $query->fetchAll()){
-                    if(empty($result)){
-                        echo $result;
+                if ($result = $query->fetch()) {
+                    if (isset($result)) {
                         $status = 4;    # Email already in database
                     }
-                }else {     # FIXME     where to put else
-                    # Add user to database
-                    $sql = "INSERT INTO users (user_email, user_password, user_type) VALUES (:email, :pass, :type)";
-                    if ($query = $pdo->prepare($sql)) {
-                        $password_hashed = password_hash($pass, PASSWORD_BCRYPT);
-                        if ($query->execute(['email' => $email, 'pass' => $password_hashed, 'type' => CUSTOMER])) {
-                            $status = 1;
-                            echo "success";
-//                            header("Location: localhost:8000/login.php");   # FIXME
-                            exit();
-                        } else {
-                            error_log("Wrong INSERT query in signup.php file");
-                            $status = 3;    # Internal Error
-                        }
+                }
+            }else{
+                $status = 5;
+                http_response_code(500);
+            }
+            if ($status == -1) {
+                # Add user to database
+                $sql = "INSERT INTO users (user_email, user_password, user_type) VALUES (:email, :pass, :type)";
+                if ($query = $pdo->prepare($sql)) {
+                    $password_hashed = password_hash($pass, PASSWORD_BCRYPT);
+                    if ($query->execute(['email' => $email, 'pass' => $password_hashed, 'type' => CUSTOMER])) {
+                        $status = 1;
+                        header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/login.php");
+                        exit();
+                    } else {
+                        error_log("Wrong INSERT query in signup.php file");
+                        $status = 3;    # Internal Error
                     }
                 }
             }
         }
     }
 }
-
 
 
 ?>
@@ -156,7 +157,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                         echo "<strong style='color: red'>Vyplňte všetky údaje</strong>";
                     }elseif($status == 2){
                         echo "<strong style='color: red'>Heslá sa nezhodujú</strong>";
-                    }elseif($status == 3){
+                    }elseif($status == 3 || $status == 5){
                         echo "<strong style='color: red'>Interná chyba, skúste znova</strong>";
                     }elseif($status == 4){
                         echo "<strong style='color: red'>Email je už registrovaný</strong>";

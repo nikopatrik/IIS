@@ -1,6 +1,8 @@
 <?php
 require_once "dbConfig.php";
 
+session_start();
+
 $email = $password = "";
 $status = -1;
 
@@ -10,7 +12,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $password = $_POST['password'];
 
     if(empty(trim($email)) || empty(trim($password))){
-        $status = 0;
+        $status = 1;
     }else{
         $sql = "SELECT * FROM users WHERE user_email = :email";
         if($query = $pdo->prepare($sql)){
@@ -18,12 +20,13 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
             if($result = $query->fetch()) {
                 if (password_verify($password, $result['user_password'])) {
                     $_SESSION['email'] = $result['user_email'];
-                    $status = 1;        # FIXME delete this
+                    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+                    exit();
                 } else {
                     $status = 0;
                 }
             }else{
-                $status = 0;
+                $status = 2;
             }
         }
     }
@@ -127,8 +130,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         <?php
         if($status == 0) {
             echo "<strong style='color: red'>Nesprávne heslo alebo email</strong>";
-        }else{
-            echo $status;   # TODO
+        }elseif($status == 1){
+            echo "<strong style='color: red'>Vyplňte všetky polia</strong>";
+        }elseif($status == 2){
+            echo "<strong style='color: red'>Interná chyba, skúste znova</strong>";
         }
         ?>
         </div>
@@ -138,7 +143,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
 
     <div class="d-flex row justify-content-center" >
             <a class="m-4" href="signup.php"> Vytvoriť účet</a>
-            <a class="m-4" href="forgottenpassword.html"> Zapomenuté heslo</a>
+            <a class="m-4" href="forgottenpassword.php"> Zapomenuté heslo</a>
     </div>
 
 </div>
