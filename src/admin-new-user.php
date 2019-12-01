@@ -1,3 +1,21 @@
+<?php
+require_once "dbConfig.php";
+$status = -1;
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty(trim($_POST['email'])) || empty(trim($_POST['password'])) || empty(trim($_POST['repeat_password'])) || ( empty($_POST['A'])&&empty($_POST['D'])&&empty($_POST['O'])&&empty($_POST['C']) ) ) {
+        $status = 0;
+    } else {
+        if (strcmp($_POST['password'], $_POST['repeat_password']) != 0) {
+            $status = 2;
+        } else {
+            // Code for inserting new user TODO
+
+        }
+    }
+}
+echo $status;
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -47,93 +65,68 @@
     <title>PaPoCADO!</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="../templates/img/papocadologo.png" width="50" height="50" alt=""> <i> PaPoCADO </i>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="form-inline mx-auto">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
-            </form>
-            <div class="navbar-nav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="login.html">
-                            Prihlásiť sa
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
+<?php
+include "navigation-bar.php";
+?>
 <div class="container mt-5 " >
     <div class="d-flex row justify-content-center">
-        <form style="min-width: 400px">
+        <form style="min-width: 400px" method="POST">
             <div class="form-group">
                 <label for="exampleInputEmail2">Email</label>
-                <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp">
+                <input type="email" name="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp">
 
             </div>
             <div class="form-group">
                 <label for="registrationPassword">Heslo</label>
-                <input type="password" class="form-control" id="registrationPassword">
+                <input type="password" name="password" class="form-control" id="registrationPassword">
             </div>
             <div class="form-group">
                 <label for="registrationConfirmPassword">Zopakujte Heslo</label>
-                <input type="password" class="form-control" id="registrationConfirmPassword">
+                <input type="password"  name="repeat_password" class="form-control" id="registrationConfirmPassword">
             </div>
 
             <div class="form-group">
                 <label for="inlineFormInput">Meno a Priezvisko</label>
-                <input type="text" class="form-control mb-2" id="inlineFormInput">
+                <input type="text" name ="name" class="form-control mb-2" id="inlineFormInput">
             </div>
 
             <div class="form-group">
                 <label for="inlineFormInput3">Telefónne číslo</label>
-                <input type="text" class="form-control mb-2" id="inlineFormInput3" placeholder="">
+                <input type="text" name="phone_number" class="form-control mb-2" id="inlineFormInput3" placeholder="">
             </div>
 
             <div class="form-group">
                 <label for="street">Ulica</label>
-                <input type="text" class="form-control" id="street" >
+                <input type="text" name="street" class="form-control" id="street" >
 
                 <label for="streetnumber">Číslo popisné</label>
-                <input type="text" class="form-control" id="streetnumber" >
+                <input type="text" name="street_number" class="form-control" id="streetnumber" >
 
                 <label for="city">Mesto</label>
-                <input type="text" class="form-control" id="city" >
+                <input type="text" name="city"  class="form-control" id="city" >
 
                 <label for="zip">PSČ</label>
-                <input type="text" class="form-control" id="zip" >
+                <input type="text" name="zip" class="form-control" id="zip" >
             </div>
 
             <div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline1" name="customRadioInline1"
+                    <input type="radio" id="customRadioInline1" name="A"
                            class="custom-control-input">
                     <label class="custom-control-label" for="customRadioInline1">Administrátor</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline2" name="customRadioInline1"
+                    <input type="radio" id="customRadioInline2" name="O"
                            class="custom-control-input">
                     <label class="custom-control-label" for="customRadioInline2">Operátor</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline3" name="customRadioInline1"
+                    <input type="radio" id="customRadioInline3" name="D"
                            class="custom-control-input">
                     <label class="custom-control-label" for="customRadioInline3">Vodič</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                    <input type="radio" id="customRadioInline4" name="customRadioInline1"
+                    <input type="radio" id="customRadioInline4" name="C"
                            class="custom-control-input">
                     <label class="custom-control-label" for="customRadioInline4">Normálny
                         uživateľ</label>
