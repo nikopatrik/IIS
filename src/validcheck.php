@@ -1,3 +1,9 @@
+<?php
+include_once "dbConfig.php";
+session_start();
+$_SESSION['email'] = 'aboarer2@shinystat.com';
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -46,35 +52,56 @@
 <?php
 include "navigation-bar.php";
 ?>
+
+<?php
+
+
+if(isset($_SESSION['email'])) {
+    $user_info = $pdo->prepare("SELECT user_email, user_name, user_phone_number, user_street, user_street_number, user_city, user_zip_code
+                                          FROM users WHERE user_email=?");
+    $user_info->execute([$_SESSION['email']]);
+    $user = $user_info->fetch();
+}
+
+$email = isset($user['user_email'])? $user['user_email'] : "";
+$name = isset($user['user_name'])? $user['user_name'] : "";
+$phone_number = isset($user['user_phone_number'])? $user['user_phone_number'] : "";
+$street = isset($user['user_street'])? $user['user_street'] : "";
+$street_number = isset($user['user_street_number'])? $user['user_street_number'] : "";
+$city = isset($user['user_city'])? $user['user_city'] : "";
+$zip_code = isset($user['user_zip_code'])? $user['user_zip_code'] : "";
+
+
+?>
 <div class="container mt-3">
     <div class="d-flex justify-content-center">
-        <form style="width: 400px">
+        <form style="width: 400px" method="post" action="validateorder.php">
             <div class="form-group">
-                <label for="formGroupExampleInput">Meno a Priezvisko</label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput"
-                       placeholder="Meno Uživateľa">
-                <label for="formGroupExampleInput3">Email</label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput3"
-                       placeholder="menouzivatela@gmail.com">
-                <label for="formGroupExampleInput4">Telefónne číslo </label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput4"
-                       placeholder="+421 902 222 000">
+                <label for="name">Meno a Priezvisko</label>
+                <input type="text" class="form-control mb-2" name="name"
+                       placeholder="Meno Uživateľa" value="<?php echo $name; ?>" id="name">
+                <label for="email">Email</label>
+                <input type="text" class="form-control mb-2" name="email"
+                       placeholder="menouzivatela@gmail.com" value="<?php echo $email; ?>" id="email">
+                <label for="phone_number">Telefónne číslo </label>
+                <input type="text" class="form-control mb-2" name="phone_number"
+                       placeholder="+421 902 222 000" value="<?php echo $phone_number; ?>" id="phone_number">
 
             </div>
             <div class="form-group">
-                <label for="formGroupExampleInput2">Adresa</label>
-                <input type="text" class="form-control my-2" id="formGroupExampleInput2"
-                       placeholder="Ulica">
+                <label for="street">Adresa</label>
+                <input type="text" class="form-control my-2" name="street"
+                       placeholder="Ulica" value="<?php echo $street; ?>" id="street">
                 <input type="text" class="form-control my-2"
-                       placeholder="Číslo popisné">
-                <input type="text" class="form-control my-2"
-                       placeholder="Mesto">
-                <input type="text" class="form-control my-2"
-                       placeholder="PSČ">
+                       placeholder="Číslo popisné" value="<?php echo $street_number; ?>" id="street_number">
+                <input type="text" class="form-control my-2" name="city"
+                       placeholder="Mesto" value="<?php echo $city; ?>" id="city">
+                <input type="text" class="form-control my-2" name="zip_code"
+                       placeholder="PSČ" value="<?php echo $zip_code; ?>" id="zip_code">
             </div>
             <div class="d-flex justify-content-between">
-                <a class="btn btn-light" href="shoppingcart.html">Zpäť do košíku</a>
-                <a type="submit" class="btn btn-primary" href="validateorder.html">Pokračovať</a>
+                <a class="btn btn-light" href="shoppingcart.php">Zpäť do košíku</a>
+                <button type="submit" class="btn btn-primary" >Pokračovať</button>
             </div>
         </form>
     </div>
