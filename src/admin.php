@@ -51,55 +51,9 @@
     <title>PaPoCADO!</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> Papocado </i>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="form-inline mx-auto">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
-            </form>
-            <div class="navbar-nav">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Meno Uživateľa
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="profile.html">Profil</a>
-                            <a class="dropdown-item" href="orders.html">Moje objednávky</a>
-                            <a class="dropdown-item" href="#">Odhlásiť sa</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="shoppingcart.html">
-                            <i class="fas fa-shopping-cart"></i>
-                        </a>
-                    </li>
-
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="login.html">-->
-                    <!--Prihlásiť sa-->
-                    <!--</a>-->
-                    <!--</li>-->
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="signup.html">-->
-                    <!--Registrovať sa-->
-                    <!--</a>-->
-                    <!--</li>-->
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
+<?php
+include "navigation-bar.php";
+?>
 <div class="container mt-3" >
     <form>
         <div class="d-flex form-group justify-content-center">

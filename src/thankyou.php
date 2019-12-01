@@ -1,3 +1,70 @@
+<?php
+include_once "dbConfig.php";
+session_start();
+$_SESSION['email'] = 'aboarer2@shinystat.com';
+
+$number_of_order = -1;
+
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+    if(isset($_POST['name'])){
+        $name = $_POST['name'];
+    }
+
+    if(isset($_POST['email'])){
+        $email= $_POST['email'];
+    }
+
+    if(isset($_POST['phone_number'])){
+        $phone_number= $_POST['phone_number'];
+    }
+
+    if(isset($_POST['street'])){
+        $street= $_POST['street'];
+    }
+
+    if(isset($_POST['street_number'])){
+        $street_number= $_POST['street_number'];
+    }
+
+    if(isset($_POST['city'])){
+        $city= $_POST['city'];
+    }
+
+    if(isset($_POST['zip_code'])){
+        $zip_code= $_POST['zip_code'];
+    }
+
+}
+
+$today_date = date("Y-m-d");
+$today_time = date("H:i:s");
+
+$qry = $pdo->prepare("SELECT SUM(cart_quantity*item_price) price FROM user_item JOIN items ON user_item.item_id_cart = items.item_id
+  JOIN users ON user_item.user_id = users.user_email WHERE user_email = ?");
+$qry->execute([$_SESSION['email']]);
+$order_price = $qry->fetch();
+
+$new_order = $pdo->prepare("INSERT INTO orders(order_date, order_time, order_price, order_state, order_owner, 
+                   order_street, order_street_number, order_city, order_zip_code) VALUES(?,?,?,false,?,?,?,?,?) ");
+$new_order->execute([$today_date, $today_time, $order_price['price'], $_SESSION['email'], $street, $street_number, $city, $zip_code]);
+
+$qry = $pdo->prepare("SELECT order_id FROM orders WHERE order_date=? AND order_time=? AND order_owner=?");
+$qry->execute([$today_date, $today_time, $_SESSION['email']]);
+
+$order = $qry->fetch();
+$number_of_order = $order['order_id'];
+
+$qry = $pdo->prepare("SELECT item_id_cart, cart_quantity FROM user_item WHERE user_id=?");
+$qry->execute([$_SESSION['email']]);
+$items = $qry->fetchAll();
+$qry = $pdo->prepare("DELETE FROM user_item WHERE user_id=?");
+$qry->execute([$_SESSION['email']]);
+
+$qry = $pdo->prepare("INSERT INTO order_items(order_of_item, item_in_order, number_of_items) VALUES(?,?,?)");
+
+
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,41 +110,21 @@
     <title>PaPoCADO!</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> PaPoCADO </i>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="form-inline mx-auto">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
-            </form>
-            <div class="navbar-nav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="signup.html">
-                            Registrovať sa
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
+<?php
+include "navigation-bar.php";
+?>
 <div class="jumbotron">
     <h1 class="display-6">Ďakujeme za nákup!</h1>
     <p class="lead">Ďakujeme za nákup! Na Vašej objednávke usiľovne pracujeme.</p>
     <hr class="my-4">
-    <p>Číslo vašej objednávky je: <strong>123246</strong>. Pre vrátenie sa na hlavnú stránku kliknite pokračovať.</p>
+    <p>Číslo vašej objednávky je: <strong><?php echo $number_of_order;?></strong>. Pre vrátenie sa na hlavnú stránku kliknite pokračovať.</p>
     <a class="btn btn-primary btn-lg" href="index.html" role="button">Pokračovať v nákupe</a>
 </div>
+<?php
+foreach ($items as $item){
+    $qry->execute([$number_of_order, $item['item_id_cart'], $item['cart_quantity']]);
+}
+?>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

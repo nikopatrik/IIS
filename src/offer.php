@@ -1,4 +1,9 @@
+<?php
+session_start();
+?>
+
 <!doctype html>
+
 <html lang="en">
 <head>
     <!-- Required meta tags -->
@@ -51,80 +56,80 @@
     <title>IIS!</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> Papocado </i>
-        </a>
+<?php
+include "navigation-bar.php";
+?>
+<?php
+require_once 'dbConfig.php';
+$id =$_GET['business'];
+if(!empty($id))
+    $_SESSION['requested_restaurant']=$id;
+$type =$_GET['type'];
+if(!empty($type))
+    $_SESSION['requested_type']=$type;
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+$stmt = $pdo->prepare('SELECT * FROM businesses WHERE business_name=?');
+$stmt->execute([$_SESSION['requested_restaurant']]);
+$business = $stmt->fetch();
+if(empty($business['business_picture_path']))
+    $picture ='img/default.jpg';
+else
+    $picture =$business['business_picture_path'];
 
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="form-inline mx-auto">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
-            </form>
-            <div class="navbar-nav">
-                <ul class="navbar-nav">
-                    <!--<li class="nav-item dropdown">-->
-                    <!--<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
-                    <!--Meno Uživateľa-->
-                    <!--</a>-->
-                    <!--<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">-->
-                    <!--<a class="dropdown-item" href="#">Profil</a>-->
-                    <!--<a class="dropdown-item" href="#">Moje objednávky</a>-->
-                    <!--<a class="dropdown-item" href="#">Odhlásiť sa</a>-->
-                    <!--</div>-->
-                    <!--</li>-->
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Prihlásiť sa
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">
-                            Registrovať sa
-                        </a>
-                    </li>
-                </ul>
-            </div>
+echo "
+    <div class=\"jumbotron jumbotron-fluid restaurant-name\" style=\"background: url(".$picture.") center center / cover no-repeat\">
+        <div class=\"container \">
+            <h1 class=\"display-4\" >".$business['business_name']."</h1>
+            <p class=\"lead\" >Posledné objednávky: ".date("H:i",strtotime($business['business_closing_time']))."<br>".$business['business_street']." ".$business['business_street_number']." ".$business['business_zip']." ".$business['business_city']."</p>
         </div>
     </div>
-</nav>
+    <nav class=\"nav justify-content-center food-type \">
+        <a class=\"nav-link active\" href=\"?type=all\">Všetky</a>
+        <a class=\"nav-link\" href=\"?type=W\">Vegetariánske</a>
+        <a class=\"nav-link\" href=\"?type=V\">Vegánske</a>
+        <a class=\"nav-link\" href=\"?type=G\">Bezlepkové</a>
+    </nav>
+    ";
 
+if( $_SESSION['requested_type'] == 'all'){
+    $stmt = $pdo->prepare('SELECT * FROM items WHERE item_business=?');
+    $stmt->execute([$business['business_id']]);
+} else {
+    $stmt = $pdo->prepare('SELECT * FROM items WHERE item_business=? AND item_type =?');
+    $stmt->execute([$business['business_id'],$_SESSION['requested_type']]);
+}
 
-    <div class="jumbotron jumbotron-fluid restaurant-name" style="background: url(https://static.urbandaddy.com/uploads/assets/image/articles/standard/7e0a3ae7d14decddaedfa77928b9dfec.jpg) center center / cover no-repeat">
-        <div class="container ">
-            <h1 class="display-4" >Roburrito</h1>
-            <p class="lead" >Čaute, volám sa Robert a po skúsenosti s mexickým food truckom v USA som sa rozhodol tento skvelý street food priniesť do Brna. </p>
-        </div>
-    </div>
+while ($item = $stmt->fetch()){
+    if(empty($item['item_image_path']))
+        $picture = "img/default_food.png";
+    else
+        $picture = $item['item_image_path'];
+    echo "    
+    <div class=\"container shadow-lg p-3 mb-5 bg-white rounded\">
+    <div class=\"card\">
+        <div class=\"card-body p-2 d-flex justify-content-between\">
+            <div class=\"d-flex justify-content-start\">
+            <img class=\"icon-size b-1\" src=\"".$picture."\"/>
 
-<nav class="nav justify-content-center food-type ">
-    <a class="nav-link active" href="?type=all">Všetky</a>
-    <a class="nav-link" href="?type=veggie">Vegetariánske</a>
-    <a class="nav-link" href="?type=veg">Vegánske</a>
-    <a class="nav-link" href="?type=gluten-free">Bezlepkové</a>
-</nav>
-
-<div class="container shadow-lg p-3 mb-5 bg-white rounded">
-    <div class="card">
-        <div class="card-body p-2 d-flex justify-content-between">
-            <div class="d-flex justify-content-start">
-            <img class="icon-size b-1" src="https://tacotimeregina.com/wp-content/uploads/2018/08/taco-time-specialty_burrito-ranch_chicken.jpg"/>
-
-                <div class="d-flex flex-column ml-3">
-                    <h5 class="card-title mb-1">Fajita burrito</h5>
-                    <p class="text-secondary"> Zloženie: láska</p>
-                    <p class="card-text"><strong>149 Kč</strong></p>
+                <div class=\"d-flex flex-column ml-3\">
+                    <h5 class=\"card-title mb-1\">".$item['item_name']."</h5>
+                    <p class=\"text-secondary\">".$item['item_description']."</p>
+                    <p class=\"card-text\"><strong>".$item['item_price']." €</strong></p>
                 </div>
             </div>
-            <a href="shoppingcart.html?id=8abcfaed5 " class="btn btn-primary align-self-end">Vybrať</a>
+            <a href=\"shoppingcart.php?item_id=".$item['item_id']." \" class=\"btn btn-primary align-self-end\">Vybrať</a>
         </div>
     </div>
 </div>
+    ";
+}
+
+?>
+
+
+
+
+
 
 
 <!-- Optional JavaScript -->

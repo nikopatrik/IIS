@@ -1,3 +1,14 @@
+<?php
+
+$useremail = 'aboarer2@shinystat.com';
+require_once 'dbConfig.php';
+
+$user_name_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');
+$user_name_stmt->execute([$useremail]);
+$user_data = $user_name_stmt->fetch();
+
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,84 +54,51 @@
     <title>PaPoCADO!</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> Papocado </i>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="form-inline mx-auto">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
-            </form>
-            <div class="navbar-nav">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Meno Uživateľa
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="profile.html">Profil</a>
-                            <a class="dropdown-item" href="orders.html">Moje objednávky</a>
-                            <a class="dropdown-item" href="#">Odhlásiť sa</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="shoppingcart.html">
-                            <i class="fas fa-shopping-cart"></i>
-                        </a>
-                    </li>
-
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="login.html">-->
-                    <!--Prihlásiť sa-->
-                    <!--</a>-->
-                    <!--</li>-->
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="signup.html">-->
-                    <!--Registrovať sa-->
-                    <!--</a>-->
-                    <!--</li>-->
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
+<?php
+include "navigation-bar.php";
+?>
 
 <div class="container mt-3">
     <div class="d-flex justify-content-center">
-        <form style="width: 400px">
+
+        <form style="width: 400px" action="validateorder.php"  method="POST" class="was-validated">
             <div class="form-group">
-                <label for="formGroupExampleInput">Meno a Priezvisko</label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput"
-                       placeholder="Meno Uživateľa">
+                <label for="name">Meno a Priezvisko</label>
+                <?php echo '
+                <input type="text" name="name" value="'.$user_data['user_name'].'" class="form-control mb-2"  pattern="[A-Za-z\s\u0080-\u9fff]+" id="name" placeholder="Meno Uživateľa" minlength="2"  maxlength="100" required>'; ?>
                 <label for="formGroupExampleInput3">Email</label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput3"
-                       placeholder="menouzivatela@gmail.com">
+                <?php echo '
+                <input type="email" name="email" class="form-control mb-2" maxlength="100" id="email" value="'.$user_data['user_email'].'" placeholder="Email uživateľa" required>'; ?>
                 <label for="formGroupExampleInput4">Telefónne číslo </label>
-                <input type="text" class="form-control mb-2" id="formGroupExampleInput4"
-                       placeholder="+421 902 222 000">
+                <?php
+                echo '
+                <input type="text" name="phone_number" value="'.$user_data['user_phone_number'].'" minlength="9" maxlength="13" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" class="form-control mb-2" id="phone_number" placeholder="+421 900 111 222" required>'; ?>
 
             </div>
-            <div class="form-group">
+
+            <div class="form-group" class="was-validated">
                 <label for="formGroupExampleInput2">Adresa</label>
-                <input type="text" class="form-control my-2" id="formGroupExampleInput2"
-                       placeholder="Ulica">
-                <input type="text" class="form-control my-2"
-                       placeholder="Číslo popisné">
-                <input type="text" class="form-control my-2"
-                       placeholder="Mesto">
-                <input type="text" class="form-control my-2"
-                       placeholder="PSČ">
+                <?php echo '
+                <input type="text" value="'.$user_data['user_street'].'" name="street" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="street" minlength="2" maxlength="100" required>';?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" value="'.$user_data['user_street_number'].'" pattern="(([0-9])+([/][0-9]+)?)" name="street_number" class="form-control" id="street_number" maxlength="10" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" name="city" value="'.$user_data['user_city'].'" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="city" maxlength="100" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+                <?php echo '
+                <input type="text" minlength="5" value="'.$user_data['user_zip_code'].'" pattern="[0-9]+" maxlength="5" name="zip_code"  class="form-control" id="zip_code" required>'; ?>
+                <div class="valid-feedback"></div>
+                <div class="invalid-feedback"></div>
+
             </div>
             <div class="d-flex justify-content-between">
-                <a class="btn btn-light" href="shoppingcart.html">Zpäť do košíku</a>
-                <a type="submit" class="btn btn-primary" href="validateorder.html">Pokračovať</a>
+                <a class="btn btn-light" href="shoppingcart.php">Zpäť do košíku</a>
+                <button type="submit" class="btn btn-primary" >Pokračovať</button>
             </div>
         </form>
     </div>

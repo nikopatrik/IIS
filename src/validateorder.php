@@ -1,3 +1,44 @@
+<?php
+include_once "dbConfig.php";
+session_start();
+$_SESSION['email'] = 'aboarer2@shinystat.com';
+
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+    if(isset($_POST['name'])){
+        $name = $_POST['name'];
+    }
+
+    if(isset($_POST['email'])){
+        $email= $_POST['email'];
+    }
+
+    if(isset($_POST['phone_number'])){
+        $phone_number= $_POST['phone_number'];
+    }
+
+    if(isset($_POST['street'])){
+        $street= $_POST['street'];
+    }
+
+    if(isset($_POST['street_number'])){
+        $street_number= $_POST['street_number'];
+    }
+
+    if(isset($_POST['city'])){
+        $city= $_POST['city'];
+    }
+
+    if(isset($_POST['zip_code'])){
+        $zip_code= $_POST['zip_code'];
+    }
+
+}
+else {
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/validcheck.php");
+    exit(0);
+}
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -43,82 +84,78 @@
     <title>PaPoCADO!</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> Papocado </i>
-        </a>
+<?php
+include "navigation-bar.php";
+?>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+<?php
+$items = $pdo->prepare("SELECT item_name, item_price, cart_quantity
+                                FROM items JOIN user_item ui on items.item_id = ui.item_id_cart
+                                WHERE user_id = ?;");
+$items->execute([$_SESSION['email']]);
 
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="form-inline mx-auto">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
-            </form>
-            <div class="navbar-nav">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Meno Uživateľa
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="profile.html">Profil</a>
-                            <a class="dropdown-item" href="orders.html">Moje objednávky</a>
-                            <a class="dropdown-item" href="#">Odhlásiť sa</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="shoppingcart.html">
-                            <i class="fas fa-shopping-cart"></i>
-                        </a>
-                    </li>
+$final_sum = 0;
+function print_item($name, $price, $count, &$final_sum){
 
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="login.html">-->
-                    <!--Prihlásiť sa-->
-                    <!--</a>-->
-                    <!--</li>-->
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="signup.html">-->
-                    <!--Registrovať sa-->
-                    <!--</a>-->
-                    <!--</li>-->
-                </ul>
+    echo " <li class=\"d-flex list-group-item justify-content-between\">
+                    <div><strong>".$name."</strong></div>
+                    <div class=\"row ml-5\">
+                        <span class=\"col mx-2\">".$price."</span >
+                        <span class=\"col mx-2\">".$count."</span >
+                        <span class=\"col mx-2\">".$price * $count." €</span >
+                    </div>
+                </li>";
+
+    $final_sum += $price * $count;
+}
+?>
+
+<form method="post" action="thankyou.php">
+<div class="container mt-2" style="width: 30rem">
+
+        <h3 class="text-center" > Potvrdenie objednávky</h3>
+        <h5 style="font-weight: bold"> Údaje pre doručenie:</h5>
+        <div class="d-flex justify-content-between">
+            <div style="font-weight: bold"> Meno a Priezvisko:</div>
+            <div>
+                <input type="text" readonly class="form-control-plaintext" name="name" id="name" value="<?php echo $name; ?>">
             </div>
         </div>
-    </div>
-</nav>
-
-<div class="container mt-2" style="width: 30rem">
-    <h3 class="text-center" > Potvrdenie objednávky</h3>
-    <h5 style="font-weight: bold"> Údaje pre doručenie:</h5>
-    <div class="d-flex justify-content-between">
-        <div style="font-weight: bold"> Meno a Priezvisko:</div>
-        <div> Meno Uživateľa</div>
-    </div>
-    <div class="d-flex justify-content-between">
-        <div style="font-weight: bold"> Email:</div>
-        <div> menouzivatela@gmail.com</div>
-    </div>
-    <div class="d-flex justify-content-between">
-        <div style="font-weight: bold"> Telefónne číslo:</div>
-        <div> +421 902 222 000</div>
-    </div>
-    <div class="d-flex justify-content-between">
-        <div style="font-weight: bold">Adresa: </div>
-        <div class="d-flex flex-column">
-            <div>Božetechova 1/2</div>
-            <div>Brno </div>
-            <div>612 00</div>
+        <div class="d-flex justify-content-between">
+            <div style="font-weight: bold"> Email:</div>
+            <div>
+                <input type="text" readonly class="form-control-plaintext" name="email" id="email" value="<?php echo $email; ?>">
+            </div>
         </div>
-    </div>
+        <div class="d-flex justify-content-between">
+            <div style="font-weight: bold"> Telefónne číslo:</div>
+            <div>
+                <input type="text" readonly class="form-control-plaintext" name="phone_number"  id="phone_number" value="<?php echo $phone_number; ?>">
+            </div>
+        </div>
+        <div class="d-flex justify-content-between">
+            <div style="font-weight: bold">Adresa: </div>
+            <div class="d-flex flex-column align-items-end">
+                <div>
+                    <input type="text" readonly class="form-control-plaintext" name="street"  id="street" value="<?php echo $street; ?>">
+                </div>
+                <div>
+                    <input type="text" readonly class="form-control-plaintext ml-2" name="street_number" id="street_number" value="<?php echo $street_number; ?>">
+                </div>
+                <div>
+                    <input type="text" readonly class="form-control-plaintext" name="city" id="city" value="<?php echo $city; ?>">
+                </div>
+                <div>
+                    <input type="text" readonly class="form-control-plaintext ml-2" name="zip_code" id="zip_code"  value="<?php echo $zip_code; ?>">
+                </div>
+
+            </div>
+        </div>
+
 
 </div>
 
-<div class="container" style="width: 30rem">
+<div class="container" style="width: 50rem">
     <div class="card  shadow p-3 m-3 mb-1 bg-white rounded">
         <div class="card-header">
             <div class="d-flex container justify-content-start">
@@ -129,21 +166,24 @@
         <div class="card-body">
             <ul class="list-group">
                 <li class="d-flex list-group-item justify-content-between">
-                    <div>Pulled Pork</div>
-                    <div>179 Kč</div>
+                    <div><strong>Názov</strong></div>
+                    <div class="row ml-5">
+                        <strong class="col">€/ks</strong>
+                        <strong class="col">Počet kusov</strong>
+                        <strong class="col">Cena</strong>
+                    </div>
                 </li>
-                <li class="d-flex list-group-item justify-content-between">
-                    <div>Red Velvet</div>
-                    <div>60 Kč</div>
-                </li>
-                <li class="d-flex list-group-item justify-content-between">
-                    <div>Hot-dog</div>
-                    <div>159 Kč</div>
-                </li>
+                <?php
+                while ($item = $items->fetch()){
+                    print_item($item['item_name'], $item['item_price'], $item['cart_quantity'], $final_sum);
+                }
+                ?>
 
                 <li class="d-flex list-group-item justify-content-between active">
-                    <div>Celkovo</div>
-                    <div>398 Kč</div>
+                    <div><strong>Celkovo</strong></div>
+                    <div class="d-flex justify-content-between ml-5">
+                        <?php echo $final_sum;?> €
+                    </div>
                 </li>
 
             </ul>
@@ -151,7 +191,8 @@
     </div>
 </div>
 
-<div class="container d-flex justify-content-center"><a href="thankyou.html" class="btn btn-primary mb-2"> Potvrdiť </a></div>
+<div class="container d-flex justify-content-center"><button type="submit" class="btn btn-primary mb-2"> Potvrdiť </button></div>
+</form>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

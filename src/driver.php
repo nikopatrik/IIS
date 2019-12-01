@@ -1,3 +1,12 @@
+<?php
+require_once 'dbConfig.php';
+if(!empty($_GET['done'])){
+    $update_stmt = $pdo->prepare('UPDATE orders SET order_state=1 WHERE order_id=?');
+    $update_stmt->execute([$_GET['done']]);
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -48,97 +57,54 @@
     <title>PaPoCADO!</title>
 </head>
 <body>
-<nav class="navbar navbar-expand-md navbar-dark justify-content-between celadon-green ">
-    <div class="container">
-        <a class="navbar-brand" href="#">
-            <img src="img/papocadologo.png" width="50" height="50" alt=""> <i> Papocado </i>
-        </a>
-
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <form class="form-inline mx-auto">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search">
-                <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
-            </form>
-            <div class="navbar-nav">
-                <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Meno Uživateľa
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <a class="dropdown-item" href="profile.html">Profil</a>
-                            <a class="dropdown-item" href="orders.html">Moje objednávky</a>
-                            <a class="dropdown-item" href="#">Odhlásiť sa</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="shoppingcart.html">
-                            <i class="fas fa-shopping-cart"></i>
-                        </a>
-                    </li>
-
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="login.html">-->
-                    <!--Prihlásiť sa-->
-                    <!--</a>-->
-                    <!--</li>-->
-                    <!--<li class="nav-item">-->
-                    <!--<a class="nav-link" href="signup.html">-->
-                    <!--Registrovať sa-->
-                    <!--</a>-->
-                    <!--</li>-->
-                </ul>
-            </div>
-        </div>
-    </div>
-</nav>
-
-<div class="container mt-3" >
-
-    <div class="card m-5 shadow p-3 mb-5 bg-white rounded">
-        <div class="card-header">
-            <div class="d-flex container justify-content-start">
-                <a href="?done=idOfObjednavka" class="btn btn-light d-flex mr-3">
-                    <span style="font-size: 1.5rem"><i class="far fa-check-circle align-self-center"></i></span>
+<?php
+include "navigation-bar.php";
+$driver = 'amelmore3@about.me';
+$driver_stmt = $pdo->prepare('SELECT * FROM orders WHERE order_driver=? AND orders.order_state = 0');
+$driver_stmt->execute([$driver]);
+while($order = $driver_stmt->fetch()){
+    $user_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');
+    $user_stmt->execute([$order['order_owner']]);
+    $user = $user_stmt->fetch();
+    echo "<div class=\"container mt-3\" >
+    
+    <div class=\"card m-5 shadow p-3 mb-5 bg-white rounded\">
+        <div class=\"card-header\">
+            <div class=\"d-flex container justify-content-start\">
+                <a href=\"?done=".$order['order_id']."\" class=\"btn btn-light d-flex mr-3\">
+                    <span style=\"font-size: 1.5rem\"><i class=\"far fa-check-circle align-self-center\"></i></span>
                 </a>
                 <div>
-                    <p class="my-1" style="font-weight: bold"> Meno Uživateľa, +421 902 222 000</p>
-                    <p class="my-1"> Božetechova 1/2, Brno 612 90</p>
+                    <p class=\"my-1\" style=\"font-weight: bold\">".$user['user_name']." ".$user['user_phone_number']."</p>
+                    <p class=\"my-1\">".$user['user_street']." ".$user['user_street_number']." ".$user['user_zip_code']." ".$user['user_city']." "."</p>
                 </div>
             </div>
         </div>
 
-        <div class="card-body">
-            <ul class="list-group">
-                <li class="d-flex list-group-item justify-content-between">
-                    <div>Pulled Pork</div>
-                    <div>179 Kč</div>
-                </li>
-                <li class="d-flex list-group-item justify-content-between">
-                    <div>Red Velvet</div>
-                    <div>60 Kč</div>
-                </li>
-                <li class="d-flex list-group-item justify-content-between">
-                    <div>Hot-dog</div>
-                    <div>159 Kč</div>
-                </li>
-
-                <li class="d-flex list-group-item justify-content-between active">
-                    <div>Celkovo</div>
-                    <div>398 Kč</div>
-                </li>
+        <div class=\"card-body\">
+            <ul class=\"list-group\">";
+            $item_stmt = $pdo->prepare('SELECT distinct i.item_name, i.item_price, oi.number_of_items FROM items i,order_items oi,orders o WHERE item_id=item_in_order and order_of_item=?');
+            $item_stmt->execute([$order['order_id']]);
+            while ($item = $item_stmt->fetch()){
+                $price = $item['item_price'] * $item['number_of_items'];
+                echo "
+                        <li class=\"d-flex list-group-item justify-content-between\">
+                            <div>".$item['item_name']. " x ".$item['number_of_items']."</div>
+                            <div>".$price." €"."</div>
+                        </li>";
+            }
+                echo "
 
             </ul>
         </div>
     </div>
 
 
-</div>
+</div>";
+}
 
+
+?>
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
