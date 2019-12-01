@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS businesses;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_item;
 
 CREATE TABLE businesses(
                            business_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -84,4 +85,12 @@ CREATE TABLE driver_business(
                                 CONSTRAINT business_constraint
                                     FOREIGN KEY (business)
                                         REFERENCES businesses(business_id)
+);
+
+CREATE TABLE user_item (
+  user_id VARCHAR(100),
+  item_id_cart INT,
+  cart_quantity INT,
+  CONSTRAINT user_item_user FOREIGN KEY (user_id) REFERENCES users(user_email),
+  CONSTRAINT user_item_item FOREIGN KEY (item_id_cart) REFERENCES items(item_id)
 );

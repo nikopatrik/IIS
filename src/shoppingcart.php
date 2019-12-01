@@ -1,3 +1,16 @@
+<?php
+include_once "dbConfig.php";
+session_start();
+$_SESSION['email'] = 'aboarer2@shinystat.com';
+
+if(isset($_POST['item_id']) and isset($_POST['quantity'])){
+    $quantity_update = $pdo->prepare("UPDATE user_item SET cart_quantity=? WHERE user_id=? AND item_id_cart=?");
+    $quantity_update->execute([$_POST['quantity'], $_SESSION['email'], $_POST['item_id']]);
+    exit(0);
+}
+
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -97,6 +110,11 @@
             margin-top: 20px;
         }
 
+        .icon-size{
+            width: 75px;
+            height: 75px;
+        }
+
     </style>
 
     <!-- Bootstrap CSS -->
@@ -106,74 +124,150 @@
     <script src="https://kit.fontawesome.com/8200b23f0f.js" crossorigin="anonymous"></script>
 
 
+    <script>
+        function quantityChanged(idOfElement, dbId) {
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("POST", "shoppingcart.php", true);
+            xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhttp.send("item_id="+dbId+"&quantity="+document.getElementById(idOfElement).value);
+        }
+
+        function addQuantity(idOfElement, dbId){
+            if(document.getElementById(idOfElement).value === 30){
+                alert("Nemozno pridat viac ako tridsat poloziek");
+                return;
+            }
+            document.getElementById(idOfElement).value++;
+            quantityChanged(idOfElement, dbId)
+        }
+
+        function decreaseQuantity(idOfElement, dbId){
+            if(document.getElementById(idOfElement).value === 1){
+                alert("Nemozno mat menej ako jednu polozku.");
+                return;
+            }
+            document.getElementById(idOfElement).value--;
+            quantityChanged(idOfElement, dbId)
+        }
+
+    </script>
+
+
     <title>PaPoCADO!</title>
 </head>
 <body>
 <?php
-include "navigation-bar.php";
+include_once "navigation-bar.php";
 ?>
-<div class="container">
-    <div class="card shopping-cart">
-        <div class="d-flex justify-content-between card-header bg-light text-dark">
-            <div>
-                <i class="fas fa-shopping-cart" aria-hidden="true"></i>
-                Košík
-            </div>
-            <a href="index.html" class="btn btn-outline-dark btn-sm pull-right">Pokračovať v nákupe</a>
-            <!--<div class="clearfix"></div>-->
-        </div>
-        <div class="card-body">
-            <!-- PRODUCT -->
-            <div class="row my-3" id="item1">
-                <div class="col-12 col-sm-12 col-md-2 text-center">
-                    <img class="img-responsive" src="https://media-cdn.tripadvisor.com/media/photo-s/18/5c/c1/d3/20190419-120507-largejpg.jpg" alt="prewiew" width="120" height="80">
+
+<?php
+include_once "dbConfig.php";
+
+if(isset($_GET['item_id'])){
+    $qry = $pdo->prepare("SELECT cart_quantity FROM user_item WHERE user_id=? AND item_id_cart=?");
+    $qry->execute([$_SESSION['email'], $_GET['item_id']]);
+    if($cart = $qry->fetch()){
+        $qry = $pdo->prepare("UPDATE user_item SET cart_quantity=? WHERE user_id=? AND item_id_cart=?");
+        $qry->execute([++$cart['cart_quantity'], $_SESSION['email'], $_GET['item_id']]);
+    }
+    else {
+        $qry = $pdo->prepare("INSERT INTO user_item(user_id, item_id_cart, cart_quantity) VALUES(?,?, 1) ");
+        $qry->execute([$_SESSION['email'], $_GET['item_id']]);
+    }
+}
+
+if(isset($_GET['remove'])){
+    $remove = $pdo->prepare("DELETE FROM user_item WHERE user_id=? AND item_id_cart=?");
+    $remove->execute([$_SESSION['email'], $_GET['remove']]);
+}
+
+$items = $pdo->prepare("SELECT item_id, item_name, item_description, item_price, item_image_path, cart_quantity
+                                FROM items JOIN user_item ui on items.item_id = ui.item_id_cart
+                                WHERE user_id = ?;");
+$items->execute([$_SESSION['email']]);
+
+
+function print_cart_item($item_id, $item_name, $item_desc, $item_price, $item_image, $quantity, &$total){
+    static $number_of_print = 0;
+    echo "
+    <!-- PRODUCT -->
+            <div class=\"row my-3\" id=\"item1\">
+                <div class=\"col-12 col-sm-12 col-md-2 text-center\">
+                    <img class=\"img-responsive icon-size \" src=\"". ($item_image ? $item_image :"img/default_food.png" ). "\" alt=\"prewiew\" width=\"120\" height=\"80\">
                 </div>
-                <div class="col-12 text-sm-center col-sm-12 text-md-left col-md-6">
-                    <h4 class="product-name"><strong>Pulled pork</strong></h4>
+                <div class=\"col-12 text-sm-center col-sm-12 text-md-left col-md-6\">
+                    <h4 class=\"product-name\"><strong>". $item_name."</strong></h4>
                     <h4>
-                        <small>Trhané bravčové mäsko.</small>
+                        <small>". $item_desc. "</small>
                     </h4>
                 </div>
-                <div class="col-12 col-sm-12 text-sm-center col-md-4 text-md-right row">
-                    <div class="col-3 col-sm-3 col-md-6 text-md-right" style="padding-top: 5px">
-                        <h6><strong>179 <span class="text-muted">Kč</span></strong></h6>
+                <div class=\"col-12 col-sm-12 text-sm-center col-md-4 text-md-right row\">
+                    <div class=\"col-3 col-sm-3 col-md-6 text-md-right\" style=\"padding-top: 5px\">
+                        <h6><strong>".$item_price. "<span class=\"text-muted\">€</span></strong></h6>
                     </div>
-                    <div class="col-4 col-sm-4 col-md-4">
-                        <div class="quantity">
-                            <input type="button" value="+" class="plus"
-                                   onclick="document.getElementById('quantity').value(document.getElementById('quantity').value ++ );"/>
-                            <input type="number" step="1" max="99" min="1" value="1" title="Qty" class="qty"
-                                   size="4" id="quantity">
-                            <input type="button" value="-" class="minus"
-                                   onclick="document.getElementById('quantity').value(document.getElementById('quantity').value -- );">
+                    <div class=\"col-4 col-sm-4 col-md-4\">
+                        <div class=\"quantity\">
+                            <input type=\"button\" value=\"+\" class=\"plus\"
+                                   onclick=\"addQuantity('quantity".$number_of_print."',".$item_id.")\"/>
+                            <input type=\"number\" step=\"1\" max=\"99\" min=\"1\" value=\"". $quantity ."\" title=\"Qty\" class=\"qty\"
+                                   size=\"4\" id=\"quantity".$number_of_print."\" onchange=\"quantityChanged('quantity".$number_of_print."',".$item_id.")\">
+                            <input type=\"button\" value=\"-\" class=\"minus\"
+                                   onclick=\"decreaseQuantity('quantity".$number_of_print."',".$item_id.")\">
                         </div>
                     </div>
-                    <div class="col-2 col-sm-2 col-md-2 text-right">
-                        <button type="button" class="btn btn-outline-danger btn-xs" onclick="
-                            var element = document.getElementById('item1');
-                            element.parentNode.removeChild(element);
-                        ">
-                            <i class="fa fa-trash" aria-hidden="true"></i>
-                        </button>
+                    <div class=\"col-2 col-sm-2 col-md-2 text-right\">
+                        <a class=\"btn btn-outline-danger btn-xs\" href='?remove=".$item_id ."'>
+                            <i class=\"fa fa-trash\" aria-hidden=\"true\"></i>
+                        </a>
                     </div>
                 </div>
                 <hr>
             </div>
             <!-- END PRODUCT -->
+    ";
 
-        </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-between" style="margin: 10px">
-                <div class="pull-right" style="margin: 5px">
-                    Celková suma <b id="total">50.00€</b>
+    $total += $item_price * $quantity;
+    $number_of_print++;
+}
+
+
+
+?>
+
+<div class="container">
+        <div class="card shopping-cart">
+            <div class="d-flex justify-content-between card-header bg-light text-dark">
+                <div>
+                    <i class="fas fa-shopping-cart" aria-hidden="true"></i>
+                    Košík
                 </div>
+                <a href="index.php" class="btn btn-outline-dark btn-sm pull-right">Pokračovať v nákupe</a>
+                <!--<div class="clearfix"></div>-->
+            </div>
+            <div class="card-body">
 
-                <a href="validcheck.html" class="btn btn-primary pull-right">Pokračovať v objednávke</a>
+                <?php
+                $total = 0;
+                while ($item = $items->fetch()) {
+                    print_cart_item($item['item_id'], $item['item_name'], $item['item_description'],
+                        $item ['item_price'], $item['item_image_path'], $item['cart_quantity'], $total);
+                }
+                ?>
 
             </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between" style="margin: 10px">
+                    <div class="pull-right" style="margin: 5px">
+                        Celková suma <b id="total"><?php echo number_format($total, 2) . " €" ?></b>
+                    </div>
+
+                    <a href="validcheck.php" class="btn btn-primary pull-right">Pokračovať v objednávke</a>
+
+                </div>
+            </div>
         </div>
-    </div>
 </div>
+
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
