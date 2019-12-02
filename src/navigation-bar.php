@@ -67,7 +67,7 @@
 
 
          echo '
-                            <a class="dropdown-item" href="#">Odhlásiť sa</a>
+                            <a class="dropdown-item" href="signout.php">Odhlásiť sa</a>
        
                         </div>
                     </li> 
