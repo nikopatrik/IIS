@@ -2,7 +2,7 @@
 
 include_once "dbConfig.php";
 session_start();
-$_SESSION['email'] = 'admin@admin.com';
+
 
 if(isset($_SESSION['email'])){
     $qry = $pdo->prepare("SELECT user_type FROM users WHERE user_email=?");
