@@ -101,14 +101,61 @@ echo "
     ";
 
 if( $_SESSION['requested_type'] == 'all'){
-    $stmt = $pdo->prepare('SELECT * FROM items WHERE item_business=?');
+    $stmt = $pdo->prepare("SELECT * FROM items WHERE item_business=? AND item_category='D'");
     $stmt->execute([$business['business_id']]);
 } else {
-    $stmt = $pdo->prepare('SELECT * FROM items WHERE item_business=? AND item_type =?');
+    $stmt = $pdo->prepare("SELECT * FROM items WHERE item_business=? AND item_type =? AND item_category='D'");
     $stmt->execute([$business['business_id'],$_SESSION['requested_type']]);
 }
 
+$first_iteration = true;
+
 while ($item = $stmt->fetch()){
+    if($first_iteration){
+        echo "<h2 class='text-center'>Denná ponuka</h2>";
+        $first_iteration=false;
+    }
+
+    if(empty($item['item_image_path']))
+        $picture = "img/default_food.png";
+    else
+        $picture = $item['item_image_path'];
+    echo "    
+    <div class=\"container shadow-lg p-3 mb-5 bg-white rounded\">
+    <div class=\"card\">
+        <div class=\"card-body p-2 d-flex justify-content-between\">
+            <div class=\"d-flex justify-content-start\">
+            <img class=\"icon-size b-1\" src=\"".$picture."\"/>
+
+                <div class=\"d-flex flex-column ml-3\">
+                    <h5 class=\"card-title mb-1\">".$item['item_name']."</h5>
+                    <p class=\"text-secondary\">".$item['item_description']."</p>
+                    <p class=\"card-text\"><strong>".$item['item_price']." €</strong></p>
+                </div>
+            </div>
+            <a href=\"shoppingcart.php?item_id=".$item['item_id']." \" class=\"btn btn-primary align-self-end\">Vybrať</a>
+        </div>
+    </div>
+</div>
+    ";
+}
+
+if( $_SESSION['requested_type'] == 'all'){
+    $stmt = $pdo->prepare("SELECT * FROM items WHERE item_business=? AND item_category='O'");
+    $stmt->execute([$business['business_id']]);
+} else {
+    $stmt = $pdo->prepare("SELECT * FROM items WHERE item_business=? AND item_type =? AND item_category='O'");
+    $stmt->execute([$business['business_id'],$_SESSION['requested_type']]);
+}
+
+$first_iteration = true;
+
+while ($item = $stmt->fetch()){
+    if($first_iteration){
+        echo "<h2 class='text-center'>Stála   ponuka</h2>";
+        $first_iteration=false;
+    }
+
     if(empty($item['item_image_path']))
         $picture = "img/default_food.png";
     else
