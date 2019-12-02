@@ -130,11 +130,6 @@ insert into order_items (order_of_item, item_in_order, number_of_items) values (
 insert into order_items (order_of_item, item_in_order, number_of_items) values (21, 14, 17);
 insert into order_items (order_of_item, item_in_order, number_of_items) values (29, 11, 12);
 
-insert into driver_business (driver, business) values ('klonghorne4@issuu.com', 4);
-insert into driver_business (driver, business) values ('klonghorne4@issuu.com', 3);
-insert into driver_business (driver, business) values ('klonghorne4@issuu.com', 4);
-insert into driver_business (driver, business) values ('aboarer2@shinystat.com', 2);
-insert into driver_business (driver, business) values ('aboarer2@shinystat.com', 1);
 
 insert into user_item(user_id, item_id_cart, cart_quantity) values ('aboarer2@shinystat.com', 11, 3);
 insert into user_item(user_id, item_id_cart, cart_quantity) values ('aboarer2@shinystat.com', 13, 3);
