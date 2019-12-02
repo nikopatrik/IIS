@@ -1,11 +1,11 @@
 <?php
 
-$useremail = 'aboarer2@shinystat.com';
+$email = 'aboarer2@shinystat.com';
 require_once 'dbConfig.php';
 
 $user_name_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');
-$user_name_stmt->execute([$useremail]);
-$user_data = $user_name_stmt->fetch();
+$user_name_stmt->execute([$email]);
+$requested_user_result = $user_name_stmt->fetch();
 
 ?>
 
@@ -65,33 +65,33 @@ include "navigation-bar.php";
             <div class="form-group">
                 <label for="name">Meno a Priezvisko</label>
                 <?php echo '
-                <input type="text" name="name" value="'.$user_data['user_name'].'" class="form-control mb-2"  pattern="[A-Za-z\s\u0080-\u9fff]+" id="name" placeholder="Meno Uživateľa" minlength="2"  maxlength="100" required>'; ?>
+                <input type="text" name="name" value="'.$requested_user_result['user_name'].'" class="form-control mb-2"  pattern="[A-Za-z\s\u0080-\u9fff]+" id="name" placeholder="Meno Uživateľa" minlength="2"  maxlength="100" required>'; ?>
                 <label for="formGroupExampleInput3">Email</label>
                 <?php echo '
-                <input type="email" name="email" class="form-control mb-2" maxlength="100" id="email" value="'.$user_data['user_email'].'" placeholder="Email uživateľa" required>'; ?>
+                <input type="email" name="email" class="form-control mb-2" maxlength="100" id="email" value="'.$requested_user_result['user_email'].'" placeholder="Email uživateľa" required>'; ?>
                 <label for="formGroupExampleInput4">Telefónne číslo </label>
                 <?php
                 echo '
-                <input type="text" name="phone_number" value="'.$user_data['user_phone_number'].'" minlength="9" maxlength="13" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" class="form-control mb-2" id="phone_number" placeholder="+421 900 111 222" required>'; ?>
+                <input type="text" name="phone_number" value="'.$requested_user_result['user_phone_number'].'" minlength="9" maxlength="13" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" class="form-control mb-2" id="phone_number" placeholder="+421 900 111 222" required>'; ?>
 
             </div>
 
             <div class="form-group" class="was-validated">
                 <label for="formGroupExampleInput2">Adresa</label>
                 <?php echo '
-                <input type="text" value="'.$user_data['user_street'].'" name="street" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="street" minlength="2" maxlength="100" required>';?>
+                <input type="text" value="'.$requested_user_result['user_street'].'" name="street" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="street" minlength="2" maxlength="100" required>';?>
                 <div class="valid-feedback"></div>
                 <div class="invalid-feedback"></div>
                 <?php echo '
-                <input type="text" value="'.$user_data['user_street_number'].'" pattern="(([0-9])+([/][0-9]+)?)" name="street_number" class="form-control" id="street_number" maxlength="10" required>'; ?>
+                <input type="text" value="'.$requested_user_result['user_street_number'].'" pattern="(([0-9])+([/][0-9]+)?)" name="street_number" class="form-control" id="street_number" maxlength="10" required>'; ?>
                 <div class="valid-feedback"></div>
                 <div class="invalid-feedback"></div>
                 <?php echo '
-                <input type="text" name="city" value="'.$user_data['user_city'].'" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="city" maxlength="100" required>'; ?>
+                <input type="text" name="city" value="'.$requested_user_result['user_city'].'" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="city" maxlength="100" required>'; ?>
                 <div class="valid-feedback"></div>
                 <div class="invalid-feedback"></div>
                 <?php echo '
-                <input type="text" minlength="5" value="'.$user_data['user_zip_code'].'" pattern="[0-9]+" maxlength="5" name="zip_code"  class="form-control" id="zip_code" required>'; ?>
+                <input type="text" minlength="5" value="'.$requested_user_result['user_zip_code'].'" pattern="[0-9]+" maxlength="5" name="zip_code"  class="form-control" id="zip_code" required>'; ?>
                 <div class="valid-feedback"></div>
                 <div class="invalid-feedback"></div>
 

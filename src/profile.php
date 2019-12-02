@@ -137,10 +137,10 @@ include "navigation-bar.php";
     <?php
     $user_name_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');
     $user_name_stmt->execute([$useremail]);
-    $user_data = $user_name_stmt->fetch();
-    $name = $user_data['user_name'];
-    if(empty($user_data['user_name']))
-        $name = $user_data['user_email'];
+    $requested_user_result = $user_name_stmt->fetch();
+    $name = $requested_user_result['user_name'];
+    if(empty($requested_user_result['user_name']))
+        $name = $requested_user_result['user_email'];
     echo "
     <h1 class=\"display-7 text-center\">".$name."</h1>
     ";
@@ -157,12 +157,12 @@ include "navigation-bar.php";
             </div>
             <div id="collapseOne" class="collapse hide" aria-labelledby="headingOne" data-parent="#accordionExample">
                 <div class="card-body">
-                    <form action="profile.php" method="POST" class="was-validated">
+                    <form action="profile.php" method="POST" class="needs-validation" novalidate>
                         <div class="form-row justify-content-around align-items-center">
                             <div class="col-auto">
                                 <label for="inlineFormInput">Meno a Priezvisko</label>
                                 <?php echo '
-                                <input type="text" name="new_name" value="'.$user_data['user_name'].'" class="form-control mb-2"  pattern="[A-Za-z\s\u0080-\u9fff]+" id="inlineFormInput" placeholder="Meno Uživateľa" minlength="2"  maxlength="100" required>';
+                                <input type="text" name="new_name" value="'.$requested_user_result['user_name'].'" class="form-control mb-2"  pattern="[A-Za-z\s\u0080-\u9fff]+" id="inlineFormInput" placeholder="Meno Uživateľa" minlength="2"  maxlength="100" required>';
                                 ?>
                                 <div class="valid-feedback"></div>
                                 <div class="invalid-feedback"></div>
@@ -170,7 +170,7 @@ include "navigation-bar.php";
                             <div class="col-auto">
                                 <label for="inlineFormInput2" >Email</label>
                                 <?php echo '
-                                <input type="email" name="new_email" class="form-control mb-2" maxlength="100" id="inlineFormInput2" value="'.$user_data['user_email'].'" placeholder="Email uživateľa" disabled>';
+                                <input type="email" name="new_email" class="form-control mb-2" maxlength="100" id="inlineFormInput2" value="'.$requested_user_result['user_email'].'" placeholder="Email uživateľa" disabled>';
                                 ?>
 
                                 <div class="valid-feedback"></div>
@@ -183,7 +183,7 @@ include "navigation-bar.php";
                                 <label for="inlineFormInput3">Telefónne číslo</label>
                                 <?php
                                 echo '
-                                <input type="text" name="new_phone_number" value="'.$user_data['user_phone_number'].'" minlength="9" maxlength="13" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" class="form-control mb-2" id="inlineFormInput3" placeholder="+421 900 111 222" required>';
+                                <input type="text" name="new_phone_number" value="'.$requested_user_result['user_phone_number'].'" minlength="9" maxlength="13" pattern="^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$" class="form-control mb-2" id="inlineFormInput3" placeholder="+421 900 111 222" required>';
                                 ?>
                                 <div class="valid-feedback"></div>
                                 <div class="invalid-feedback"></div>
@@ -208,29 +208,29 @@ include "navigation-bar.php";
             </div>
             <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionExample">
                 <div class="card-body">
-                    <form action="profile.php" method="POST" class="was-validated">
+                    <form action="profile.php" method="POST" class="needs-validation" novalidate>
                         <div class="form-group">
                             <label for="street">Ulica</label>
                             <?php echo '
-                            <input type="text" value="'.$user_data['user_street'].'" name="new_street" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="street" minlength="2" maxlength="100">';?>
+                            <input type="text" value="'.$requested_user_result['user_street'].'" name="new_street" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="street" minlength="2" maxlength="100">';?>
                             <div class="valid-feedback"></div>
                             <div class="invalid-feedback"></div>
 
                             <label for="streetnumber">Číslo popisné</label>
                             <?php echo '
-                            <input type="text" value="'.$user_data['user_street_number'].'" pattern="(([0-9])+([/][0-9]+)?)" name="new_street_number" class="form-control" id="streetnumber" maxlength="10">'; ?>
+                            <input type="text" value="'.$requested_user_result['user_street_number'].'" pattern="(([0-9])+([/][0-9]+)?)" name="new_street_number" class="form-control" id="streetnumber" maxlength="10">'; ?>
                             <div class="valid-feedback"></div>
                             <div class="invalid-feedback"></div>
 
                             <label for="city">Mesto</label>
                             <?php echo '
-                            <input type="text" name="new_city" value="'.$user_data['user_city'].'" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="city" maxlength="100">'; ?>
+                            <input type="text" name="new_city" value="'.$requested_user_result['user_city'].'" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" id="city" maxlength="100">'; ?>
                             <div class="valid-feedback"></div>
                             <div class="invalid-feedback"></div>
 
                             <label for="zip">PSČ</label>
                             <?php echo '
-                            <input type="text" minlength="5" value="'.$user_data['user_zip_code'].'" pattern="[0-9]+" maxlength="5" name="new_zip"  class="form-control" id="zip">'; ?>
+                            <input type="text" minlength="5" value="'.$requested_user_result['user_zip_code'].'" pattern="[0-9]+" maxlength="5" name="new_zip"  class="form-control" id="zip">'; ?>
                             <div class="valid-feedback"></div>
                             <div class="invalid-feedback"></div>
                         </div>
@@ -287,41 +287,65 @@ include "navigation-bar.php";
     <?php
     $user_stmt = $pdo->prepare('SELECT * FROM orders WHERE order_owner=? ORDER BY order_date DESC');
     $user_stmt->execute([$useremail]);
-
     while($order = $user_stmt->fetch()){
         echo "
-    <div class=\"card m-5 shadow p-3 mb-5 bg-white rounded\">
-        <div class=\"card-header\">
-            <div class=\"d-flex container justify-content-start\">
-               <img class=\"icon-size\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADh CAMAAAAJbSJIAAAAclBMVEUAAAD////q6upkZGTl5eXU1NRzc3Ojo6M3NzdcXFyKioqwsLDExMSfn5++vr7Q0NBOTk4nJycUFBTw8PAsLCw/Pz+Dg4P4+PhVVVVFRUV8fHwYGBiXl5cRERHc3NysrKwiIiJJSUlubm6Pj48zMzOZmZnYnRXIAAAECElEQVR4nO2abVuqQBBAletbSVpqoGlkWf//L153FmEXtYs+jNulc740DLvAMVeWZTodAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDmWa+eXVbb0BfUOMuuz0voC2ocDP9/2m/4GEU9h/kg9AXBL2f34DCyuZGJdxK+7KPh0qZnm0O74dpm3of7jUTCzTSOpxIm7hEPQ/i+6LqyiafxnuFrfsL7JEm0Rnvk/qTMreKdxBLGJrSynX7ZMLKXNjBxv2w4rDTrdqe267jMpFZxJIfJP6mJ2XhTMux5v5rpc2EYlRd+b6JZ5jaMngrDaXmRx4ZxubPgsTScye5FajYWNzHspmcNY79h7wLDh8o51hXDxMR9JcGqYfesYd9vN7/AcOx3lf+Wayg91G5JYjgZ7nmrYSgNJzUMpeH+mElh2Jft9IThSv6xWoLW8M5EsxqGd8Xufxh+uOcQwy8TbecnDOWjHesa/jHRUw1DafinhqH3nRPDBxMtThlKbtViww8TZWqCP8BwWpyipYYy/NNtiw03JpjoCYY3lGnjXYsN5Wm7pygY3HBS7PtphulVhp+VOc1rxyRSvZvhdYaLwZ6PqwzXH6bvrDBUnnRfa1hysWFJbpgdNW6coIa9ZTGk9QhrqDzpFoIazuWn9bF5K5eghoLipFsIb6g46RbCGzbv5FMabps0PH7GP2cYN+/kI4aDxefnYnWlYfZilnP7vuGbSSaJXVb91lBvgSbHW2tL7bfrMkOHo7W2rTT7/lv6rKnXqRra4dOYYf5g+73hTlOvUzHMx8RtDbUHor8ibN8d3PZbqj0QHUPzICMzqMsM55M4jieRb9iPDRP75uWsYSoPUzeb0yxE00Q3u1tkss6mPBCV7oc1Z9678gBq8PSkahjZFX3NlbbghnL8TfNaDoEN7/UHYmDDZ/mzbt6rJKzhqx2IlcM2S1jDfEVYdSBeYTja7HY7yV2+Xrrvudm5lQoyEFUXTMOuec/sTGr+9AMNG3v3pH5HDG5Ydmyr4Yv2QAxuuJZRvW2xoVPR01ZD2atVmPgjDJ0SzjYYnqhrK5+8FQ1lFKxrGKrUtWVHHZo3tDX5vmFq6/R9Q6nhj2oYHor9x4WhzZyqTVStEP6mvtRBDDM/12B9qRS26RWcVAzlchde8Xc3lUr2SqHv5ALDyrKqvDB0DD+Lj/YGhvnT9tbNpnmp/teRYO06b0/RvhF1a4R1yxVOrep3OrMyfRD0FPNX755hmp417AzSIpPfF9xa/YdelvW+tAzfHx3K9OyQWjol9Ktqw+1yH1fLfVbuEQ8vlkbF8fLEq9l413ECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgN/KX7+jVGXgR95gAAAAAElFTkSuQmCC\" />
-                <h5 class=\"align-self-center mx-4\"> ".date("j.n.Y",strtotime($order['order_date']))." ".date("H:i",strtotime($order['order_time']))." </h5>
-            </div>
-        </div>
+                        <div class=\"card m-5 shadow p-3 mb-5 bg-white rounded\">
+                            <div class=\"card-header\">
+                                <div class=\"d-flex container justify-content-start\">
+                                   <img class=\"icon-size\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADh CAMAAAAJbSJIAAAAclBMVEUAAAD////q6upkZGTl5eXU1NRzc3Ojo6M3NzdcXFyKioqwsLDExMSfn5++vr7Q0NBOTk4nJycUFBTw8PAsLCw/Pz+Dg4P4+PhVVVVFRUV8fHwYGBiXl5cRERHc3NysrKwiIiJJSUlubm6Pj48zMzOZmZnYnRXIAAAECElEQVR4nO2abVuqQBBAletbSVpqoGlkWf//L153FmEXtYs+jNulc740DLvAMVeWZTodAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDmWa+eXVbb0BfUOMuuz0voC2ocDP9/2m/4GEU9h/kg9AXBL2f34DCyuZGJdxK+7KPh0qZnm0O74dpm3of7jUTCzTSOpxIm7hEPQ/i+6LqyiafxnuFrfsL7JEm0Rnvk/qTMreKdxBLGJrSynX7ZMLKXNjBxv2w4rDTrdqe267jMpFZxJIfJP6mJ2XhTMux5v5rpc2EYlRd+b6JZ5jaMngrDaXmRx4ZxubPgsTScye5FajYWNzHspmcNY79h7wLDh8o51hXDxMR9JcGqYfesYd9vN7/AcOx3lf+Wayg91G5JYjgZ7nmrYSgNJzUMpeH+mElh2Jft9IThSv6xWoLW8M5EsxqGd8Xufxh+uOcQwy8TbecnDOWjHesa/jHRUw1DafinhqH3nRPDBxMtThlKbtViww8TZWqCP8BwWpyipYYy/NNtiw03JpjoCYY3lGnjXYsN5Wm7pygY3HBS7PtphulVhp+VOc1rxyRSvZvhdYaLwZ6PqwzXH6bvrDBUnnRfa1hysWFJbpgdNW6coIa9ZTGk9QhrqDzpFoIazuWn9bF5K5eghoLipFsIb6g46RbCGzbv5FMabps0PH7GP2cYN+/kI4aDxefnYnWlYfZilnP7vuGbSSaJXVb91lBvgSbHW2tL7bfrMkOHo7W2rTT7/lv6rKnXqRra4dOYYf5g+73hTlOvUzHMx8RtDbUHor8ibN8d3PZbqj0QHUPzICMzqMsM55M4jieRb9iPDRP75uWsYSoPUzeb0yxE00Q3u1tkss6mPBCV7oc1Z9678gBq8PSkahjZFX3NlbbghnL8TfNaDoEN7/UHYmDDZ/mzbt6rJKzhqx2IlcM2S1jDfEVYdSBeYTja7HY7yV2+Xrrvudm5lQoyEFUXTMOuec/sTGr+9AMNG3v3pH5HDG5Ydmyr4Yv2QAxuuJZRvW2xoVPR01ZD2atVmPgjDJ0SzjYYnqhrK5+8FQ1lFKxrGKrUtWVHHZo3tDX5vmFq6/R9Q6nhj2oYHor9x4WhzZyqTVStEP6mvtRBDDM/12B9qRS26RWcVAzlchde8Xc3lUr2SqHv5ALDyrKqvDB0DD+Lj/YGhvnT9tbNpnmp/teRYO06b0/RvhF1a4R1yxVOrep3OrMyfRD0FPNX755hmp417AzSIpPfF9xa/YdelvW+tAzfHx3K9OyQWjol9Ktqw+1yH1fLfVbuEQ8vlkbF8fLEq9l413ECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgN/KX7+jVGXgR95gAAAAAElFTkSuQmCC\" />
+                                    <h5 class=\"align-self-center mx-4\"> ".date("j.n.Y",strtotime($order['order_date']))." ".date("H:i",strtotime($order['order_time']))." </h5>
+                                </div>
+                            </div>
         
-        <div class=\"card-body\">
-            <ul class=\"list-group\">";
-
+                        <div class=\"card-body\">
+                            <ul class=\"list-group\">";
+        $total_price =0;
         $item_stmt = $pdo->prepare('SELECT distinct i.item_name, i.item_price, oi.number_of_items FROM items i,order_items oi,orders o WHERE item_id=item_in_order and order_of_item=?');
         $item_stmt->execute([$order['order_id']]);
         while ($item = $item_stmt->fetch()){
             $price = $item['item_price'] * $item['number_of_items'];
+            $total_price += $price;
             echo "
-                <li class=\"d-flex list-group-item justify-content-between\">
-                    <div>".$item['item_name']. " x ".$item['number_of_items']."</div>
-                    <div>".$price." €"."</div>
-                </li>";
+                            <li class=\"d-flex list-group-item justify-content-between\">
+                                <div>".$item['item_name']. " x ".$item['number_of_items']."</div>
+                                <div>".$price." €"."</div>
+                            </li>
+
+                            ";
+
         }
-
-
-            echo "
-            </ul>
-        </div>
-    </div>";
+        echo "
+                            <li class=\"d-flex list-group-item justify-content-between\">
+                                <div>Spolu</div>
+                                <div>".$total_price." €"."</div>
+                            </li>
+                            </ul>
+                            </div>
+                        </div>";
     }
-
-
     ?>
  </div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

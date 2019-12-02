@@ -11,7 +11,7 @@ if(isset($_SESSION['email'])){
 
 $email = $pass = $password_second = "";
 $status = -1;
-define("CUSTOMER", 'c');
+define("CUSTOMER", 'C');
 
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -43,7 +43,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             if ($status == -1) {
                 # Add user to database
-                $sql = "INSERT INTO users (user_email, user_password, user_type) VALUES (:email, :pass, :type)";
+                $sql = "INSERT INTO users (user_email, user_password, user_type,user_active) VALUES (:email, :pass, :type,1)";
                 if ($query = $pdo->prepare($sql)) {
                     $password_hashed = password_hash($pass, PASSWORD_BCRYPT);
                     if ($query->execute(['email' => $email, 'pass' => $password_hashed, 'type' => CUSTOMER])) {
