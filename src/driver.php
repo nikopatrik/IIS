@@ -16,7 +16,7 @@ if(isset($_SESSION['email'])){
     $sql = $pdo->prepare($select);
     $sql->execute(['email' => $driver]);
     $result = $sql->fetch();
-    if(!($result['user_type'] ==='D')){
+    if(!($result['user_type'] ==='D') && !($result['user_type'] === 'O') && !($result['user_type'] === 'A')){
         header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
     }
 }else{
