@@ -1,6 +1,6 @@
 <?php
-
-$email = 'aboarer2@shinystat.com';
+session_start();
+$email = $_SESSION['email'];
 require_once 'dbConfig.php';
 
 $user_name_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');

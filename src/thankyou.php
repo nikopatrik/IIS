@@ -1,7 +1,6 @@
 <?php
 include_once "dbConfig.php";
 session_start();
-$_SESSION['email'] = 'aboarer2@shinystat.com';
 
 $number_of_order = -1;
 
@@ -118,7 +117,7 @@ include "navigation-bar.php";
     <p class="lead">Ďakujeme za nákup! Na Vašej objednávke usiľovne pracujeme.</p>
     <hr class="my-4">
     <p>Číslo vašej objednávky je: <strong><?php echo $number_of_order;?></strong>. Pre vrátenie sa na hlavnú stránku kliknite pokračovať.</p>
-    <a class="btn btn-primary btn-lg" href="index.html" role="button">Pokračovať v nákupe</a>
+    <a class="btn btn-primary btn-lg" href="index.php" role="button">Pokračovať v nákupe</a>
 </div>
 <?php
 foreach ($items as $item){

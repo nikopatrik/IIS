@@ -1,7 +1,6 @@
 <?php
 include_once "dbConfig.php";
 session_start();
-$_SESSION['email'] = 'aboarer2@shinystat.com';
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     if(isset($_POST['name'])){
