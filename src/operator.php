@@ -1,3 +1,88 @@
+<?php
+include_once "dbConfig.php";
+session_start();
+$_SESSION['email'] = 'admin@admin.com';
+
+if(isset($_SESSION['email'])){
+    $qry = $pdo->prepare("SELECT user_type FROM users WHERE user_email=?");
+    $qry->execute([$_SESSION['email']]);
+    $type = $qry->fetch();
+    if($type['user_type'] != 'A' and $type['user_type'] != 'O'){
+        header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+        return;
+    }
+
+}
+else {
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+    return;
+}
+
+
+
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+    if(isset($_POST['driver'])){
+        $driver = $_POST['driver'];
+    }
+
+    if(isset($_POST['order_id'])){
+        $order_id= $_POST['order_id'];
+    }
+
+    $postqry = $pdo->prepare("UPDATE orders SET order_driver=?, order_state=true WHERE order_id=?");
+    $postqry->execute([$driver, $order_id]);
+
+}
+
+function print_order($order_id, $items, $drivers){
+    $total_price = 0;
+    echo "
+    <div class=\"card m-5 shadow p-3 mb-5 bg-white rounded\">
+        <div class=\"card-header\">
+            <div class=\"d-flex container justify-content-start\">
+               <h5 class=\"align-self-center mx-4\"> #".$order_id."</h5>
+            </div>
+        </div>
+
+        <div class=\"card-body d-flex justify-content-between\">
+            <ul class=\"list-group\" style=\"width: 20rem\">";
+    foreach ($items as $item){
+        echo "           
+                <li class=\"d-flex list-group-item justify-content-between\">
+                    <div>".$item['item_name']."</div>
+                    <div>". $item['item_price']." € </div>
+                    <div>".$item['number_of_items']."</div>
+                </li>";
+        $total_price += $item['item_price'] * $item['number_of_items'];
+    }
+    echo "
+                <li class=\"d-flex list-group-item justify-content-between active\">
+                    <div>Celkovo</div>
+                    <div>".$total_price." €</div>
+                </li>
+
+            </ul>";
+
+    echo "
+            <div class=\"d-flex flex-column justify-content-between\">
+                        <form class=\"form-inline align-self-end\" method='POST' action='operator.php'>
+                            <select class=\"custom-select\" name='driver'>";
+     foreach ($drivers as $driver)
+         echo "<option>".$driver['user_email']."</option>";
+
+    echo "
+                            </select>
+                            <button type=\"submit\" class=\"btn btn-primary mx-2\"> Priradiť vodiča</button>
+                            <input type=\"hidden\" id=\"order_id\" name=\"order_id\" value=\"".$order_id."\">
+                        </form>
+
+                    </div>
+
+        </div>
+    </div>";
+}
+
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -56,14 +141,14 @@ include "navigation-bar.php";
 ?>
 <div class="container mt-3" >
 
-    <form class="d-flex form-inline justify-content-center">
-        <input type="text" class="form-control mx-2" placeholder="Hľadať prevádzku"/>
-        <select class="custom-select mx-2">
+    <form class="d-flex form-inline justify-content-center" method="GET" action="bussiness.php">
+        <input type="text" class="form-control mx-2" placeholder="Hľadať prevádzku" name="keyword"/>
+        <select class="custom-select mx-2" name="attribute">
             <option>ID prevádzky</option>
             <option>Názov prevádzky</option>
         </select>
         <button type="submit" class="btn btn-primary mx-2" >Hľadať </button>
-        <a href="bussiness.html" class="btn btn-light mx-2"> Vytvoriť novú prevádzku</a>
+        <a href="bussiness.php" class="btn btn-light mx-2"> Vytvoriť novú prevádzku</a>
     </form>
 </div>
 <hr>
@@ -74,68 +159,28 @@ include "navigation-bar.php";
         <h1 class="display-7 text-center col-6"> Objednávky</h1>
         <a class="btn btn-light col px-2">Ukončiť objednávky</a>
     </div>
-    <div class="card m-5 shadow p-3 mb-5 bg-white rounded">
-        <div class="card-header">
-            <div class="d-flex container justify-content-start">
-                <img class="icon-size" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAclBMVEUAAAD////q6upkZGTl5eXU1NRzc3Ojo6M3NzdcXFyKioqwsLDExMSfn5++vr7Q0NBOTk4nJycUFBTw8PAsLCw/Pz+Dg4P4+PhVVVVFRUV8fHwYGBiXl5cRERHc3NysrKwiIiJJSUlubm6Pj48zMzOZmZnYnRXIAAAECElEQVR4nO2abVuqQBBAletbSVpqoGlkWf//L153FmEXtYs+jNulc740DLvAMVeWZTodAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDmWa+eXVbb0BfUOMuuz0voC2ocDP9/2m/4GEU9h/kg9AXBL2f34DCyuZGJdxK+7KPh0qZnm0O74dpm3of7jUTCzTSOpxIm7hEPQ/i+6LqyiafxnuFrfsL7JEm0Rnvk/qTMreKdxBLGJrSynX7ZMLKXNjBxv2w4rDTrdqe267jMpFZxJIfJP6mJ2XhTMux5v5rpc2EYlRd+b6JZ5jaMngrDaXmRx4ZxubPgsTScye5FajYWNzHspmcNY79h7wLDh8o51hXDxMR9JcGqYfesYd9vN7/AcOx3lf+Wayg91G5JYjgZ7nmrYSgNJzUMpeH+mElh2Jft9IThSv6xWoLW8M5EsxqGd8Xufxh+uOcQwy8TbecnDOWjHesa/jHRUw1DafinhqH3nRPDBxMtThlKbtViww8TZWqCP8BwWpyipYYy/NNtiw03JpjoCYY3lGnjXYsN5Wm7pygY3HBS7PtphulVhp+VOc1rxyRSvZvhdYaLwZ6PqwzXH6bvrDBUnnRfa1hysWFJbpgdNW6coIa9ZTGk9QhrqDzpFoIazuWn9bF5K5eghoLipFsIb6g46RbCGzbv5FMabps0PH7GP2cYN+/kI4aDxefnYnWlYfZilnP7vuGbSSaJXVb91lBvgSbHW2tL7bfrMkOHo7W2rTT7/lv6rKnXqRra4dOYYf5g+73hTlOvUzHMx8RtDbUHor8ibN8d3PZbqj0QHUPzICMzqMsM55M4jieRb9iPDRP75uWsYSoPUzeb0yxE00Q3u1tkss6mPBCV7oc1Z9678gBq8PSkahjZFX3NlbbghnL8TfNaDoEN7/UHYmDDZ/mzbt6rJKzhqx2IlcM2S1jDfEVYdSBeYTja7HY7yV2+Xrrvudm5lQoyEFUXTMOuec/sTGr+9AMNG3v3pH5HDG5Ydmyr4Yv2QAxuuJZRvW2xoVPR01ZD2atVmPgjDJ0SzjYYnqhrK5+8FQ1lFKxrGKrUtWVHHZo3tDX5vmFq6/R9Q6nhj2oYHor9x4WhzZyqTVStEP6mvtRBDDM/12B9qRS26RWcVAzlchde8Xc3lUr2SqHv5ALDyrKqvDB0DD+Lj/YGhvnT9tbNpnmp/teRYO06b0/RvhF1a4R1yxVOrep3OrMyfRD0FPNX755hmp417AzSIpPfF9xa/YdelvW+tAzfHx3K9OyQWjol9Ktqw+1yH1fLfVbuEQ8vlkbF8fLEq9l413ECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgN/KX7+jVGXgR95gAAAAAElFTkSuQmCC" />
-                <h5 class="align-self-center mx-4"> Bucheck </h5>
-            </div>
-        </div>
-
-        <div class="card-body d-flex justify-content-between">
-            <ul class="list-group" style="width: 20rem">
-                <li class="d-flex list-group-item justify-content-between">
-                    <div>Pulled Pork</div>
-                    <div>179 Kč</div>
-                </li>
-                <li class="d-flex list-group-item justify-content-between">
-                    <div>Red Velvet</div>
-                    <div>60 Kč</div>
-                </li>
-                <li class="d-flex list-group-item justify-content-between">
-                    <div>Hot-dog</div>
-                    <div>159 Kč</div>
-                </li>
-
-                <li class="d-flex list-group-item justify-content-between active">
-                    <div>Celkovo</div>
-                    <div>398 Kč</div>
-                </li>
-
-            </ul>
-
-            <div class="d-flex flex-column justify-content-between">
-                        <form class="form-inline align-self-end">
-                            <select class="custom-select">
-                                <option>Vodič 1</option>
-                                <option>Vodič 2</option>
-                                <option>Vodič 3</option>
-                                <option>Vodič 4</option>
-
-                            </select>
-                            <button type="submit" class="btn btn-primary mx-2"> Priradiť vodiča</button>
-                        </form>
 
 
-                        <form class="form-inline">
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="customCheck1">
-                                <label class="custom-control-label" for="customCheck1">Označiť objednávku ako
-                                    potvrdenú</label>
-                            </div>
+</div>
 
-                            <button type="submit" class="btn btn-primary mx-3">
-                                <i class="fas fa-check-circle">Potvrdené</i>
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+<div class="container">
+    <?php
 
-        </div>
-    </div>
+    $orders = $pdo->prepare("SELECT order_id FROM orders WHERE order_state IS NOT TRUE OR order_owner IS NULL");
+    $orders->execute();
+    while($order = $orders->fetch()){
+        $qry = $pdo->prepare("SELECT user_email FROM users WHERE user_type='D' or user_type='A'");
+        $qry->execute();
+        $drivers = $qry->fetchAll();
+        $qry = $pdo->prepare("SELECT item_name, item_price, number_of_items FROM items
+                              JOIN order_items oi on items.item_id = oi.item_in_order WHERE order_of_item=?");
+        $qry->execute([$order['order_id']]);
+        $items = $qry->fetchAll();
 
+        print_order($order['order_id'], $items, $drivers);
+    }
 
+    ?>
 </div>
 
 
