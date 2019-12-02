@@ -1,5 +1,20 @@
 <?php
 require_once 'dbConfig.php';
+session_start();
+
+if(isset($_SESSION['email'])){
+    $driver = $_SESSION['email'];
+    $select = "SELECT * FROM users WHERE user_email = :email";
+    $sql = $pdo->prepare($select);
+    $sql->execute(['email' => $driver]);
+    $result = $sql->fetch();
+    if(!($result['user_type'] ==='D')){
+        header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+    }
+}else{
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+}
+
 if(!empty($_GET['done'])){
     $update_stmt = $pdo->prepare('UPDATE orders SET order_state=1 WHERE order_id=?');
     $update_stmt->execute([$_GET['done']]);
@@ -59,7 +74,6 @@ if(!empty($_GET['done'])){
 <body>
 <?php
 include "navigation-bar.php";
-$driver = 'amelmore3@about.me';
 $driver_stmt = $pdo->prepare('SELECT * FROM orders WHERE order_driver=? AND orders.order_state = 0');
 $driver_stmt->execute([$driver]);
 while($order = $driver_stmt->fetch()){
