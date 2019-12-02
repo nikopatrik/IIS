@@ -42,7 +42,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     $status = 3;    # Account is not active
                 }else {
                     if (password_verify($password, $result['user_password'])) {
-                        $qry = $pdo->prepare("DELETE * FROM users WHERE user_email=?");
+                        $qry = $pdo->prepare("DELETE FROM users WHERE user_email=?");
                         $qry->execute($_SESSION['email']);
                         $_SESSION['email'] = $result['user_email'];
                         header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
