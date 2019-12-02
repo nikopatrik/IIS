@@ -147,7 +147,7 @@ include "navigation-bar.php";
 
     <div class="d-flex row justify-content-center" >
             <a class="m-4" href="signup.php"> Vytvoriť účet</a>
-            <a class="m-4" href="forgottenpassword.php"> Zapomenuté heslo</a>
+            <a class="m-4" href="" onclick="alert('Kontaktujte admina na admin@admin.com')"> Zapomenuté heslo</a>
     </div>
 
 </div>
