@@ -2,6 +2,14 @@
 session_start();
 include_once "dbConfig.php";
 $requested_user = "";
+
+if(!isset($_SESSION['email'])){
+    $new_user = $pdo->prepare("INSERT INTO users(user_email,user_type, user_password) VALUES (?,'N','nothing')");
+    $guid = uniqid('non_registered_') . "@nonregistered.xx";
+    $new_user->execute([$guid]);
+    $_SESSION['email'] = $guid;
+}
+
 if(isset($_SESSION['email'])){
     $admin = $_SESSION['email'];
     $select = "SELECT * FROM users WHERE user_email = :email";
@@ -17,7 +25,6 @@ if(isset($_SESSION['email'])){
 
 
 if($_SERVER["REQUEST_METHOD"] == 'GET'){
-    $_SESSION['hovo']= "hono";
     $print_results =0;
     if(!(isset($_GET['email'])&& $_GET['email'] != "")){
         $searched_word = "";

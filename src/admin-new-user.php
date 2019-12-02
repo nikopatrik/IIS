@@ -2,6 +2,14 @@
 session_start();
 require_once "dbConfig.php";
 
+
+if(!isset($_SESSION['email'])){
+    $new_user = $pdo->prepare("INSERT INTO users(user_email,user_type, user_password) VALUES (?,'N','nothing')");
+    $guid = uniqid('non_registered_') . "@nonregistered.xx";
+    $new_user->execute([$guid]);
+    $_SESSION['email'] = $guid;
+}
+
 if(isset($_SESSION['email'])){
     $admin = $_SESSION['email'];
     $select = "SELECT * FROM users WHERE user_email = :email";

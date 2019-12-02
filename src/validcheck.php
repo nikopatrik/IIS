@@ -1,5 +1,24 @@
 <?php
 session_start();
+include_once 'dbConfig.php';
+
+
+if(!isset($_SESSION['email'])){
+    $new_user = $pdo->prepare("INSERT INTO users(user_email,user_type, user_password) VALUES (?,'N','nothing')");
+    $guid = uniqid('non_registered_') . "@nonregistered.xx";
+    $new_user->execute([$guid]);
+    $_SESSION['email'] = $guid;
+}
+
+
+if(isset($_SESSION['email'])){
+    $qry = $pdo->prepare("SELECT user_type FROM users WHERE user_email=?");
+    $qry->execute([$_SESSION['email']]);
+    $ans = $qry->fetch();
+    $is_logged_in = $ans['user_type'] != 'N';
+}
+
+
 $email = $_SESSION['email'];
 
 require_once 'dbConfig.php';
@@ -17,7 +36,10 @@ $user_name_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');
 $user_name_stmt->execute([$email]);
 $requested_user_result = $user_name_stmt->fetch();
 
-
+if($is_logged_in)
+   $email = $requested_user_result['user_email'];
+else
+    $email = '';
 
 ?>
 
@@ -80,7 +102,7 @@ include "navigation-bar.php";
                 <input type="text" name="name" value="'.$requested_user_result['user_name'].'" class="form-control mb-2"  pattern="[A-Za-z\s\u0080-\u9fff]+" id="name" placeholder="Meno Uživateľa" minlength="2"  maxlength="100" required>'; ?>
                 <label for="formGroupExampleInput3">Email</label>
                 <?php echo '
-                <input type="email" name="email" class="form-control mb-2" maxlength="100" id="email" value="'.$requested_user_result['user_email'].'" placeholder="Email uživateľa" required>'; ?>
+                <input type="email" name="email" class="form-control mb-2" maxlength="100" id="email" value="'.$email.'" placeholder="Email uživateľa" required>'; ?>
                 <label for="formGroupExampleInput4">Telefónne číslo </label>
                 <?php
                 echo '

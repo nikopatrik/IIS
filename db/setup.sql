@@ -45,8 +45,7 @@ CREATE TABLE users(
                       user_city VARCHAR(100),
                       user_zip_code VARCHAR (5),
                       user_type VARCHAR (1),
-                      user_active BOOLEAN,
-                      CHECK (user_type IN ('A','O','D','C')), -- Admin Operator Driver Customer
+                      CHECK (user_type IN ('A','O','D','C','N')), -- Admin Operator Driver Customer Nonregistrated
                       CONSTRAINT email_constraint CHECK ( REGEXP_LIKE( user_email, '.+@(.+\..+)+' ))
 );
 
