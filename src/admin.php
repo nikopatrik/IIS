@@ -135,6 +135,22 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){ //&&
             $stmt=$pdo->prepare('UPDATE users SET user_type=? WHERE user_email=?');
             $stmt->execute([$_POST['new_role'],$useremail]);
         }
+        if(!empty($_POST['delete_user'])){
+            $stmt=$pdo->prepare('UPDATE users SET user_active=0 WHERE user_email=?');
+            $stmt->execute([$useremail]);
+        }
+
+        if(!empty($_POST['activate_user'])){
+            $stmt=$pdo->prepare('UPDATE users SET user_active=1 WHERE user_email=?');
+            $stmt->execute([$useremail]);
+        }
+
+        if(!empty($_POST['new_password'])){
+            $stmt=$pdo->prepare('UPDATE users SET user_password=? WHERE user_email=?');
+            $password_hashed = password_hash($_POST['new_password'], PASSWORD_BCRYPT);
+            $stmt->execute([$password_hashed,$useremail]);
+        }
+
     }
 }
 if(!empty($_SESSION['requested_user'])){
@@ -329,10 +345,19 @@ include "navigation-bar.php";
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                     <div class="card-body">
-                        <form class="form-inline">
-                            <input type="password" class="form-control mb-2 mr-sm-2" id="inlineFormInputName5" placeholder="Nové heslo">
-                            <input type="password" class="form-control mb-2 mr-sm-2" id="inlineFormInputName6" placeholder="Znovu nové heslo">
-
+                        <form class="form-inline" class="was-validated" action="admin.php" method="post">
+                            <input type="password" name="new_password" class="form-control mb-2 mr-sm-2" id="registrationPassword" placeholder="Nové heslo"required>
+                            <input type="password" name="repeatNewPass" class="form-control mb-2 mr-sm-2" id="registrationConfirmPassword" placeholder="Znovu nové heslo" required oninput="check(this)">
+                            <script language='javascript' type='text/javascript'>
+                                function check(input) {
+                                    if (input.value != document.getElementById('registrationPassword').value) {
+                                        input.setCustomValidity('Password Must be Matching.');
+                                    } else {
+                                        // input is valid -- reset the error message
+                                        input.setCustomValidity('');
+                                    }
+                                }
+                            </script>
                             <button type="submit" class="btn btn-primary mb-2">Zmeniť heslo</button>
                         </form>
                     </div>
@@ -477,16 +502,17 @@ include "navigation-bar.php";
                 <div class="card-header" id="headingSix">
                     <h2 class="mb-0">
                         <button class="btn collapsed" type="button" data-toggle="collapse" data-target="#collapseSix" aria-expanded="false" aria-controls="collapseSix">
-                            <strong> Vymazať uživateľa </strong>
+                            <strong> De/Aktivovať uživateľa </strong>
                         </button>
                     </h2>
                 </div>
                 <div id="collapseSix" class="collapse" aria-labelledby="headingSix" data-parent="#accordionExample">
                     <div class="card-body">
-                        <form class="form-inline">
-                            <input type="password" class="form-control mb-2 mr-sm-2" id="inlineFormInputName10" placeholder="Heslo pre potvrdenie">
-
-                            <button type="submit" class="btn btn-primary mb-2">Vymazať</button>
+                        <form class="form-inline" method="post">
+                            <button type="submit" name="activate_user" value="activate" class="btn btn-primary mb-2">Aktivovať</button>
+                        </form>
+                        <form class="form-inline" method="post">
+                            <button type="submit" name="delete_user" value="delete" class="btn btn-primary mb-2">Deaktivovať</button>
                         </form>
 
                     </div>
