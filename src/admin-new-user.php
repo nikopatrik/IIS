@@ -1,6 +1,20 @@
 <?php
 session_start();
 require_once "dbConfig.php";
+
+if(isset($_SESSION['email'])){
+    $admin = $_SESSION['email'];
+    $select = "SELECT * FROM users WHERE user_email = :email";
+    $sql = $pdo->prepare($select);
+    $sql->execute(['email' => $admin]);
+    $result = $sql->fetch();
+    if(!($result['user_type'] ==='A')){
+        header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+    }
+}else{
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+}
+
 $status = -1;
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty(trim($_POST['email'])) || empty(trim($_POST['password'])) || empty(trim($_POST['repeat_password']))   ) {

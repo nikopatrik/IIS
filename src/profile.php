@@ -1,6 +1,20 @@
 <?php
-
+require_once "dbConfig.php";
 session_start();
+
+if(isset($_SESSION['email'])){
+    $user = $_SESSION['email'];
+    $select = "SELECT * FROM users WHERE user_email = :email";
+    $sql = $pdo->prepare($select);
+    $sql->execute(['email' => $user]);
+    $result = $sql->fetch();
+    if(!($result['user_type'] ==='A') && !($result['user_type'] ==='O') && !($result['user_type'] ==='D') && !($result['user_type'] ==='C')){
+        header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+    }
+}else{
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+}
+
 
 if(!isset($_SESSION['email'])){
     header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/login.php");

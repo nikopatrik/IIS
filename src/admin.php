@@ -2,6 +2,18 @@
 session_start();
 include_once "dbConfig.php";
 $requested_user = "";
+if(isset($_SESSION['email'])){
+    $admin = $_SESSION['email'];
+    $select = "SELECT * FROM users WHERE user_email = :email";
+    $sql = $pdo->prepare($select);
+    $sql->execute(['email' => $admin]);
+    $result = $sql->fetch();
+    if(!($result['user_type'] ==='A')){
+        header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+    }
+}else{
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+}
 
 
 if($_SERVER["REQUEST_METHOD"] == 'GET'){
