@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "dbConfig.php";
 $status = -1;
 if($_SERVER["REQUEST_METHOD"] == "POST") {
