@@ -31,7 +31,7 @@
    if(isset($_SESSION['email'])){
        $is_logged_in = true;
 
-       $result = $pdo->prepare("SELECT user_email, user_type FROM iisdb.users WHERE user_email=?");
+       $result = $pdo->prepare("SELECT user_email, user_type FROM users WHERE user_email=?");
        $result->execute([$name_of_user]);
        $user = $result->fetch();
 
