@@ -2,6 +2,13 @@
 include_once "dbConfig.php";
 session_start();
 
+if(!isset($_SESSION['email'])){
+    $new_user = $pdo->prepare("INSERT INTO users(user_email,user_type, user_password) VALUES (?,'N','nothing')");
+    $guid = uniqid('non_registered_') . "@nonregistered.xx";
+    $new_user->execute([$guid]);
+    $_SESSION['email'] = $guid;
+}
+
 if(isset($_POST['item_id']) and isset($_POST['quantity'])){
     $quantity_update = $pdo->prepare("UPDATE user_item SET cart_quantity=? WHERE user_id=? AND item_id_cart=?");
     $quantity_update->execute([$_POST['quantity'], $_SESSION['email'], $_POST['item_id']]);

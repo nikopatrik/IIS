@@ -37,6 +37,9 @@
 
    }
 
+   if($user['user_type'] === 'N')
+       $is_logged_in = false;
+
    if($user['user_type'] === 'A'){
        $is_admin = true;
        $is_operator = true;
