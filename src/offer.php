@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+require_once 'dbConfig.php';
 
 if(!isset($_SESSION['email'])){
     $new_user = $pdo->prepare("INSERT INTO users(user_email,user_type, user_password) VALUES (?,'N','nothing')");
@@ -69,7 +69,6 @@ if(!isset($_SESSION['email'])){
 include "navigation-bar.php";
 ?>
 <?php
-require_once 'dbConfig.php';
 $id =$_GET['business'];
 if(!empty($id))
     $_SESSION['requested_restaurant']=$id;

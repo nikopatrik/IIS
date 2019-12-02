@@ -6,6 +6,8 @@ $username = 'iisuser';
 $password = 'iispwd';
 $charset = 'utf8mb4';
 
+header('Content-Type: text/html; charset=utf-8');
+
 $options = [
     PDO::ATTR_EMULATE_PREPARES      => false,                       # use real prepared statements (because SQL injection)
     PDO::ATTR_ERRMODE               => PDO::ERRMODE_EXCEPTION,      # throw exception instead error, for handling errors in queries
