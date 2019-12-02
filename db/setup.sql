@@ -45,6 +45,7 @@ CREATE TABLE users(
                       user_city VARCHAR(100),
                       user_zip_code VARCHAR (5),
                       user_type VARCHAR (1),
+                      user_active BOOLEAN,
                       CHECK (user_type IN ('A','O','D','C')), -- Admin Operator Driver Customer
                       CONSTRAINT email_constraint CHECK ( REGEXP_LIKE( user_email, '.+@(.+\..+)+' ))
 );
@@ -81,18 +82,6 @@ CREATE TABLE order_items(
                             CONSTRAINT item_constraint
                                 FOREIGN KEY (item_in_order)
                                     REFERENCES items(item_id)
-);
-
-CREATE TABLE driver_business(
-                                driver VARCHAR(100),
-                                business INT,
-                                CONSTRAINT driver_constraint
-                                    FOREIGN KEY (driver)
-                                        REFERENCES users(user_email),
-
-                                CONSTRAINT business_constraint
-                                    FOREIGN KEY (business)
-                                        REFERENCES businesses(business_id)
 );
 
 CREATE TABLE user_item (
