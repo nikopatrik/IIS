@@ -118,7 +118,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
             $new_business->execute([$business_name, $business_street, $business_street_num, $business_city, $business_zip,
                 $business_closingTime, $business_picture]);
             $business_exist->execute(([$business_name]));
-            $business_id = $business_exist['business_id'];
+            $business = $business_exist->fetch();
+            $business_id = $business['business_id'];
             header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/bussiness.php?keyword={$business_id}&attribute=ID+prevádzky");
 
         }
