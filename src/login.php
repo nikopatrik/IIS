@@ -17,21 +17,25 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $password = $_POST['password'];
 
     if(empty(trim($email)) || empty(trim($password))){
-        $status = 1;
+        $status = 1;    # Fields are empty
     }else{
         $sql = "SELECT * FROM users WHERE user_email = :email";
         if($query = $pdo->prepare($sql)){
             $query->execute(['email' => $email]);
             if($result = $query->fetch()) {
-                if (password_verify($password, $result['user_password'])) {
-                    $_SESSION['email'] = $result['user_email'];
-                    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
-                    exit();
-                } else {
-                    $status = 0;
+                if(!$result['user_active']){
+                    $status = 3;    # Account is not active
+                }else {
+                    if (password_verify($password, $result['user_password'])) {
+                        $_SESSION['email'] = $result['user_email'];
+                        header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+                        exit();
+                    } else {
+                        $status = 0;    # Wrong password
+                    }
                 }
             }else{
-                $status = 0;
+                $status = 0;    # Wrong email address
             }
         }
     }
@@ -114,6 +118,8 @@ include "navigation-bar.php";
             echo "<strong style='color: red'>Vyplňte všetky polia</strong>";
         }elseif($status == 2){
             echo "<strong style='color: red'>Interná chyba, skúste znova</strong>";
+        }elseif ($status == 3){
+            echo "<strong style='color: red'>Tento účet nie je aktívny</strong>";
         }
         ?>
         </div>
