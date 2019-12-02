@@ -2,6 +2,8 @@
 include_once "dbConfig.php";
 session_start();
 
+$business_id = false;
+
 if(!isset($_SESSION['email'])){
     $new_user = $pdo->prepare("INSERT INTO users(user_email,user_type, user_password) VALUES (?,'N','nothing')");
     $guid = uniqid('non_registered_') . "@nonregistered.xx";
@@ -390,17 +392,19 @@ include "navigation-bar.php";
 
     <div class="accordion" id="accordionExample">
         <?php
-        $items = $pdo->prepare("SELECT item_id, item_name, item_description, item_price, item_category, item_type, 
+        if($business_id) {
+            $items = $pdo->prepare("SELECT item_id, item_name, item_description, item_price, item_category, item_type, 
         item_image_path, item_limit, item_business FROM items WHERE item_business=?");
-        $items->execute([$business_id]);
+            $items->execute([$business_id]);
 
-        $itemsALL = $items->fetchAll();
-        foreach ($itemsALL as $item) {
-            print_item($item, $business_id);
+            $itemsALL = $items->fetchAll();
+            foreach ($itemsALL as $item) {
+                print_item($item, $business_id);
+            }
+
+            print_item(array('item_id' => "", 'item_name' => "", 'item_description' => "", 'item_price' => "", 'item_category' => "",
+                'item_type' => ""), $business_id);
         }
-
-        print_item(array('item_id'=>"", 'item_name'=>"", 'item_description'=>"", 'item_price'=>"", 'item_category'=>"",
-            'item_type'=>""), $business_id)
         ?>
     </div>
 
