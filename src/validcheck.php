@@ -1,7 +1,7 @@
 <?php
 session_start();
 $email = $_SESSION['email'];
-$_SESSION['email'] = 'aboarer2@shinystat.com';
+
 require_once 'dbConfig.php';
 
 if(isset($_SESSION['email'])){

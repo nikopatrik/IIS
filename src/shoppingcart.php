@@ -1,7 +1,7 @@
 <?php
 include_once "dbConfig.php";
 session_start();
-$_SESSION['email'] = 'aboarer2@shinystat.com';
+
 if(isset($_POST['item_id']) and isset($_POST['quantity'])){
     $quantity_update = $pdo->prepare("UPDATE user_item SET cart_quantity=? WHERE user_id=? AND item_id_cart=?");
     $quantity_update->execute([$_POST['quantity'], $_SESSION['email'], $_POST['item_id']]);
