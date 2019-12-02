@@ -9,9 +9,11 @@ RUN a2enmod rewrite
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 RUN php composer-setup.php --install-dir=. --filename=composer
 RUN mv composer /usr/local/bin/
+
+COPY ./src/ /var/www/html/
 RUN chmod 0777 /var/www/html/img/
 
 RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
 
-COPY ./src/ /var/www/html/
+
 EXPOSE 80
