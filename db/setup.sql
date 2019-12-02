@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS order_items;
-DROP TABLE IF EXISTS driver_business;
+DROP TABLE IF EXISTS user_item;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS businesses;
 DROP TABLE IF EXISTS orders;
@@ -10,9 +10,9 @@ CREATE TABLE businesses(
                            business_id INT PRIMARY KEY AUTO_INCREMENT,
                            business_name VARCHAR (100),
                            business_street VARCHAR (100),
-                           business_street_number INT,
+                           business_street_number VARCHAR (10),
                            business_city VARCHAR (100),
-                           business_zip INT,
+                           business_zip VARCHAR (10),
                            business_closing_time TIME,
                            business_picture_path VARCHAR (1000)
 );
@@ -66,7 +66,7 @@ CREATE TABLE orders(
                        CONSTRAINT order_owner_constraint
                            FOREIGN KEY (order_owner)
                                REFERENCES users(user_email),
-                        CONSTRAINT order_driver_constraint
+                       CONSTRAINT order_driver_constraint
                            FOREIGN KEY (order_driver)
                                REFERENCES users(user_email)
 );
@@ -85,9 +85,9 @@ CREATE TABLE order_items(
 );
 
 CREATE TABLE user_item (
-  user_id VARCHAR(100),
-  item_id_cart INT,
-  cart_quantity INT,
-  CONSTRAINT user_item_user FOREIGN KEY (user_id) REFERENCES users(user_email),
-  CONSTRAINT user_item_item FOREIGN KEY (item_id_cart) REFERENCES items(item_id)
+                           user_id VARCHAR(100),
+                           item_id_cart INT,
+                           cart_quantity INT,
+                           CONSTRAINT user_item_user FOREIGN KEY (user_id) REFERENCES users(user_email),
+                           CONSTRAINT user_item_item FOREIGN KEY (item_id_cart) REFERENCES items(item_id)
 );
