@@ -1,11 +1,23 @@
 <?php
 session_start();
 $email = $_SESSION['email'];
+$_SESSION['email'] = 'aboarer2@shinystat.com';
 require_once 'dbConfig.php';
+
+if(isset($_SESSION['email'])){
+    $cart = $pdo->prepare("SELECT * FROM user_item WHERE user_id=?");
+    $cart->execute([$_SESSION['email']]);
+    if(!$cart->fetch()){
+        header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/shoppingcart.php?no=1");
+        return;
+    }
+}
 
 $user_name_stmt = $pdo->prepare('SELECT * FROM users WHERE user_email=?');
 $user_name_stmt->execute([$email]);
 $requested_user_result = $user_name_stmt->fetch();
+
+
 
 ?>
 
