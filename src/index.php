@@ -51,25 +51,49 @@ include "navigation-bar.php";
     <div class="row">
         <!--template to fill in with database info -->
         <?php
-        require_once 'dbConfig.php';
-        foreach ($pdo->query("SELECT * FROM businesses") as $row){
-            $time=strtotime($row['business_closing_time']);
-            if(empty($row['business_picture_path']))
-                $picture ='img/default.jpg';
-            else
-                $picture =$row['business_picture_path'];
+        include_once "dbConfig.php";
+        if($_SERVER['REQUEST_METHOD'] == "GET" && isset($_GET['search'])){
+            $searchName = $_GET['search'];
+            $searchName = htmlspecialchars($searchName);
+            foreach($pdo->query("SELECT * FROM businesses WHERE (`business_name` LIKE '%".$searchName."%')") as $row){
+                $time = strtotime($row['business_closing_time']);
+                if (empty($row['business_picture_path']))
+                    $picture = 'img/default.jpg';
+                else
+                    $picture = $row['business_picture_path'];
 
-            echo "<div class=\"col3-sm\">
+                echo "<div class=\"col3-sm\">
+                    <div class=\"card m-1\" style=\"width: 16rem;\">
+                        <a class=\"clickable-card\" href=\"offer.php?business=" . $row['business_name'] . "&type=all\" >
+                        <img class=\"card-image-same-size\" src=\"" . $picture . "\" class=\"card-img-top\" alt=\"...\">
+                    <div class=\"card-body\">
+                    <h5 class=\"card-title\">" . $row['business_name'] . "</h5>
+                    <p class=\"card-text\">Posledné objednávky: " . date("H:i", $time) . "</p>
+                    </div>
+                    </a>
+                </div>
+            </div>";
+            }
+        }else {
+            foreach ($pdo->query("SELECT * FROM businesses") as $row) {
+                $time = strtotime($row['business_closing_time']);
+                if (empty($row['business_picture_path']))
+                    $picture = 'img/default.jpg';
+                else
+                    $picture = $row['business_picture_path'];
+
+                echo "<div class=\"col3-sm\">
             <div class=\"card m-1\" style=\"width: 16rem;\">
-                <a class=\"clickable-card\" href=\"offer.php?business=".$row['business_name']."&type=all\" >
-                <img class=\"card-image-same-size\" src=\"".$picture."\" class=\"card-img-top\" alt=\"...\">
+                <a class=\"clickable-card\" href=\"offer.php?business=" . $row['business_name'] . "&type=all\" >
+                <img class=\"card-image-same-size\" src=\"" . $picture . "\" class=\"card-img-top\" alt=\"...\">
                 <div class=\"card-body\">
-                    <h5 class=\"card-title\">".$row['business_name']."</h5>
-                <p class=\"card-text\">Posledné objednávky: ".date("H:i",$time)."</p>
+                    <h5 class=\"card-title\">" . $row['business_name'] . "</h5>
+                <p class=\"card-text\">Posledné objednávky: " . date("H:i", $time) . "</p>
                 </div>
                 </a>
             </div>
         </div>";
+            }
         }
         ?>
 

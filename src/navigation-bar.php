@@ -11,7 +11,7 @@
 
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
             <form class="form-inline mx-auto" method="get" action="index.php">
-                <input class="form-control mr-sm-2" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search" id="search">
+                <input class="form-control mr-sm-2" name="search" type="search" placeholder="Vyhľadať reštaurácie" aria-label="Search" id="search">
                 <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Hľadať</button>
             </form>
 
