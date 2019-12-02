@@ -193,22 +193,22 @@ function print_item($item, $business_id){
 
             <div id=\"collapse{$count}\" class=\"collapse hide\" aria-labelledby=\"heading{$count}\" data-parent=\"#accordionExample\">
                 <div class=\"card-body\">
-                    <form method='post' action='item.php' enctype='multipart/form-data'>
+                    <form method='post' novalidate class=\"needs-validation\" action='item.php' enctype='multipart/form-data'>
                         <div class=\"row\">
                         <input name='business_id' type=\"text\" readonly class=\"form-control-plaintext invisible\" placeholder=\"ID\" value='".$business_id."'>
                             <div class=\"col my-2\">
                                 <input name='item_id' type=\"text\" readonly class=\"form-control-plaintext \" placeholder=\"ID\" value='".$item['item_id']."'>
                             </div>
                             <div class=\"col my-2\">
-                                <input name='item_name' type=\"text\" class=\"form-control\" placeholder=\"Názov\" value='".$item['item_name']."'> 
+                                <input name='item_name' type=\"text\" required minlength='2' maxlength='99' class=\"form-control\" placeholder=\"Názov\" value='".$item['item_name']."'> 
                             </div>
                             <div class=\"col my-2\">
-                                <input name='item_desc' type=\"text\" class=\"form-control\" placeholder=\"Popis\" value='".$item['item_description']."'>
+                                <input name='item_desc' type=\"text\" required minlength='2' maxlength='9999' class=\"form-control\" placeholder=\"Popis\" value='".$item['item_description']."'>
                             </div>
                         </div>
                         <div class=\"row\">
                             <div class=\"col my-2\">
-                                <input name='item_price' type=\"text\" class=\"form-control\" placeholder=\"Cena\" style=\"font-weight: bold\" value='".$item['item_price']."'>
+                                <input name='item_price' type=\"text\" required minlength='1' maxlength='10' pattern='[0-9]+([.][0-9]+)?' class=\"form-control\" placeholder=\"Cena\" style=\"font-weight: bold\" value='".$item['item_price']."'>
                             </div>
                             <div class=\"col my-2\">
                                 <select class=\"custom-select\" name='item_type'>
@@ -241,7 +241,7 @@ function print_item($item, $business_id){
                         <div class=\"row\">
                             <div class=\"col my-2\">
                                 <div class=\"custom-file\">
-                                    <input type=\"file\" class=\"custom-file-input\" id=\"customFile1\" name='item_pic'>
+                                    <input type=\"file\" class=\"custom-file-input\" required id=\"customFile1\" name='item_pic'>
                                     <label class=\"custom-file-label\" for=\"customFile\">Vybrať fotku</label>
                                 </div>
                             </div>
@@ -249,7 +249,7 @@ function print_item($item, $business_id){
                                 <button type=\"submit\" class=\"btn btn-primary\" name='item_save' style=\"width: 100%\"> Uložiť </button>
                             </div>
                             <div class=\"col my-2\" >
-                                <input id=\"limit\" name='item_limit' type=\"text\" class=\"form-control\" placeholder=\"Počet položiek dennej ponuky\" disabled/>
+                                <input id=\"limit\" name='item_limit' required minlength='1' maxlength='6' type=\"text\" class=\"form-control\" placeholder=\"Počet položiek dennej ponuky\" disabled/>
                             </div>
 
                         </div>
@@ -326,37 +326,48 @@ include "navigation-bar.php";
 
 <div class="container mt-3 d-flex justify-content-center" >
 
-    <form method="post" action="bussiness.php" enctype="multipart/form-data">
+    <form method="post" action="bussiness.php" class="needs-validation" novalidate enctype="multipart/form-data">
         <h1 class="display-7 text-center"> Údaje o prevádzke </h1>
         <h5> <?php if($error_msg) echo $error_msg; ?></h5>
 
         <div class="form-group">
             <input type="text"  readonly class="form-control-plaintext my-2" placeholder="ID" value="<?php echo $business['business_id']; ?>" name="business_id" />
-            <input type="text" class="form-control my-2" placeholder="Názov" value="<?php echo $business['business_name']; ?>" name="business_name"/>
+            <input type="text" required class="form-control my-2" placeholder="Názov" minlength="2" maxlength="99" value="<?php echo $business['business_name']; ?>" name="business_name"/>
+            <div class="invalid-feedback">Povinný údaj</div>
+
 
         </div>
 
         <div class="form-group">
             <label><strong> Adresa </strong></label>
             <div class="row my-2">
-                <div class="col"><input type="text" class="form-control" placeholder="Ulica" name="business_street" value="<?php echo $business['business_street']; ?>"/></div>
-                <div class="col-4"><input type="text" class="form-control" placeholder="Číslo" name="business_street_num" value="<?php echo $business['business_street_number']; ?>"/></div>
+                <div class="col"><input type="text" required minlength="2" maxlength="100" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" placeholder="Ulica" name="business_street" value="<?php echo $business['business_street']; ?>"/><div class="invalid-feedback">Povinný údaj</div></div>
+                <div class="invalid-feedback">Povinný údaj</div>
+
+                <div class="col-4"><input type="text" required maxlength="10" pattern="(([0-9])+([/][0-9]+)?)" class="form-control" placeholder="Číslo" name="business_street_num" value="<?php echo $business['business_street_number']; ?>"/><div class="invalid-feedback">Povinný údaj</div></div>
+                <div class="invalid-feedback">Povinný údaj</div>
+
             </div>
             <div class="row my-2">
-                <div class="col"><input type="text" class="form-control" placeholder="Mesto" name="business_city" value="<?php echo $business['business_city']; ?>"/></div>
-                <div class="col-4"><input type="text" class="form-control" placeholder="PSČ" name="business_zip" value="<?php echo $business['business_zip']; ?>"/></div>
+                <div class="col"><input type="text" required minlength="2" maxlength="100" pattern="[A-Za-z\s\u0080-\u9fff]+" class="form-control" placeholder="Mesto" name="business_city" value="<?php echo $business['business_city']; ?>"/><div class="invalid-feedback">Povinný údaj</div></div>
+                <div class="invalid-feedback">Povinný údaj</div>
+
+                <div class="col-4"><input type="text" required pattern="[0-9]+" maxlength="5" class="form-control" placeholder="PSČ" name="business_zip" value="<?php echo $business['business_zip']; ?>"/><div class="invalid-feedback">Povinný údaj</div></div>
+                <div class="invalid-feedback">Povinný údaj</div>
             </div>
 
         </div>
 
         <div class="form-group">
-            <label><strong> Other </strong></label>
-            <input type="time" placeholder="Zadajte čas uzávierky"  class="form-control my-2" name="business_closingTime" value="<?php echo $business['business_closing_time']; ?>">
+            <label><strong> Ďalšie </strong></label>
+            <input type="time" placeholder="Zadajte čas uzávierky" required class="form-control my-2" name="business_closingTime" value="<?php echo $business['business_closing_time']; ?>">
+            <div class="invalid-feedback">Povinný údaj</div>
+
             <div class="custom-file">
-                <input type="file" class="custom-file-input" id="customFile" name="business_picture">
+                <input type="file" class="custom-file-input" required id="customFile" name="business_picture">
+                <div class="invalid-feedback">Povinný údaj</div>
                 <label class="custom-file-label" for="customFile">Vybrať fotku</label>
             </div>
-
         </div>
 
         <button class="btn btn-primary my-2" type="submit" name="create">Vytvoriť</button>
@@ -387,6 +398,27 @@ include "navigation-bar.php";
     </div>
 
 </div>
+
+<script>
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    (function() {
+        'use strict';
+        window.addEventListener('load', function() {
+            // Fetch all the forms we want to apply custom Bootstrap validation styles to
+            var forms = document.getElementsByClassName('needs-validation');
+            // Loop over them and prevent submission
+            var validation = Array.prototype.filter.call(forms, function(form) {
+                form.addEventListener('submit', function(event) {
+                    if (form.checkValidity() === false) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        }, false);
+    })();
+</script>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

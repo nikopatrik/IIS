@@ -71,13 +71,14 @@ function print_order($order_id, $items, $drivers){
          echo "<option>".$driver['user_email']."</option>";
 
     echo "
-                            </select>
-                            <button type=\"submit\" class=\"btn btn-primary mx-2\"> Priradiť vodiča</button>
-                            <input type=\"hidden\" id=\"order_id\" name=\"order_id\" value=\"".$order_id."\">
+                            </select>";
+                            if(!$drivers)
+                                echo "<button disabled type=\"submit\" class=\"btn btn-primary mx-2\"> Priradiť vodiča</button>";
+                            else
+                                echo "<button type=\"submit\" class=\"btn btn-primary mx-2\"> Priradiť vodiča</button>";
+                            echo "<input type=\"hidden\" id=\"order_id\" name=\"order_id\" value=\"".$order_id."\">
                         </form>
-
                     </div>
-
         </div>
     </div>";
 }
