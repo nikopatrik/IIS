@@ -1,5 +1,14 @@
 <?php
-$useremail = 'aboarer2@shinystat.com';
+
+session_start();
+
+if(!isset($_SESSION['email'])){
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/login.php");
+    exit();
+}
+$useremail = $_SESSION['email'];
+$status = -1;
+
 require_once 'dbConfig.php';
 if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(isset($_POST['new_name'])){
@@ -30,6 +39,41 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     if(!empty($_POST['new_street_number'])){
         $stmt=$pdo->prepare('UPDATE users SET user_street_number=? WHERE user_email=?');
         $stmt->execute([$_POST['new_street_number'],$useremail]);
+    }
+
+    if(!empty($_POST['oldPass']) && !empty($_POST['newPass']) && !empty($_POST['newPassConfirm'])){
+        $oldPass = $_POST['oldPass'];
+        $oldPassCurrent = "";
+        $newPass = $_POST['newPass'];
+        $newPassConfirm = $_POST['newPassConfirm'];
+
+        if (strcmp($newPass, $newPassConfirm) != 0) {
+            $status = 1;    # Passwords do not match
+        } else {
+            $stmt = $pdo->prepare('SELECT * FROM users WHERE user_email = :email');
+            $stmt->execute(['email' => $useremail]);
+            if ($result = $stmt->fetch()) {
+                if (isset($result['user_password'])) {
+                    $oldPassCurrent = $result['user_password'];
+                    if (!password_verify($oldPass, $oldPassCurrent)) {
+                        $status = 3;    # Old password do not match
+                    }
+                }
+            } else {
+                $status = 2;    # Error in query
+                error_log("Error in SELECT password query in profile.php");
+            }
+
+            if ($status == -1) {
+                $stmt = $pdo->prepare('UPDATE users SET user_password = :pass WHERE user_email = :email');
+                $passHash = password_hash($newPass, PASSWORD_BCRYPT);
+                if ($stmt->execute(['pass' => $passHash, 'email' => $useremail])) {
+                    $status = 0;
+                }
+            }
+
+        }
+
     }
 }
 ?>
@@ -203,16 +247,29 @@ include "navigation-bar.php";
                     <button class="btn collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                         <strong> Nastavenie hesla </strong>
                     </button>
+                    <?php
+                    if($status == 0){
+                        echo "Heslo zmenené";
+                    }elseif($status == 1){
+                        echo "Vaše nové heslá sa nezhodujú";
+                    }elseif ($status == 2){
+                        echo "Interná chyba, skúste znova";
+                    }elseif($status == 3){
+                        echo "Staré heslo nie je správne";
+                    }elseif($status == 4){
+                        echo "Vyplňte všetky polia";
+                    }
+                    ?>
                 </h2>
             </div>
             <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
                 <div class="card-body">
-                    <form class="form-inline">
+                    <form class="form-inline" action="profile.php" method="POST">
                         <label class="mx-2" for="inlineFormInputName4">Zmena hesla</label>
-                        <input type="password" class="form-control mb-2 mr-sm-2" id="inlineFormInputName4" placeholder="Staré heslo">
+                        <input type="password" name="oldPass" class="form-control mb-2 mr-sm-2" id="inlineFormInputName4" placeholder="Staré heslo">
                         <label class="mx-2 align-self-top" style="font-size: 2rem; color: #ced4da" for="inlineFormInputName5">|</label>
-                        <input type="password" class="form-control mb-2 mr-sm-2" id="inlineFormInputName5" placeholder="Nové heslo">
-                        <input type="password" class="form-control mb-2 mr-sm-2" id="inlineFormInputName6" placeholder="Znovu nové heslo">
+                        <input type="password" name="newPass" class="form-control mb-2 mr-sm-2" id="inlineFormInputName5" placeholder="Nové heslo">
+                        <input type="password" name="newPassConfirm" class="form-control mb-2 mr-sm-2" id="inlineFormInputName6" placeholder="Znovu nové heslo">
 
                         <button type="submit" class="btn btn-primary mb-2">Zmeniť heslo</button>
                     </form>

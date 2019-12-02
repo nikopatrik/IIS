@@ -3,6 +3,11 @@ require_once "dbConfig.php";
 
 session_start();
 
+if(isset($_SESSION['email'])){
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+    exit();
+}
+
 $email = $password = "";
 $status = -1;
 
@@ -26,7 +31,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
                     $status = 0;
                 }
             }else{
-                $status = 2;
+                $status = 0;
             }
         }
     }

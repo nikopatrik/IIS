@@ -2,11 +2,17 @@
 
 include_once "dbConfig.php";
 
+session_start();
+
+if(isset($_SESSION['email'])){
+    header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/index.php");
+    exit();
+}
+
 $email = $pass = $password_second = "";
 $status = -1;
 define("CUSTOMER", 'c');
 
-session_start();
 
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 
