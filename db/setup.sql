@@ -65,7 +65,7 @@ CREATE TABLE orders(
 
                        CONSTRAINT order_owner_constraint
                            FOREIGN KEY (order_owner)
-                               REFERENCES users(user_email),
+                               REFERENCES users(user_email) ON DELETE SET NULL ,
                        CONSTRAINT order_driver_constraint
                            FOREIGN KEY (order_driver)
                                REFERENCES users(user_email)
@@ -88,6 +88,6 @@ CREATE TABLE user_item (
                            user_id VARCHAR(100),
                            item_id_cart INT,
                            cart_quantity INT,
-                           CONSTRAINT user_item_user FOREIGN KEY (user_id) REFERENCES users(user_email),
-                           CONSTRAINT user_item_item FOREIGN KEY (item_id_cart) REFERENCES items(item_id)
+                           CONSTRAINT user_item_user FOREIGN KEY (user_id) REFERENCES users(user_email) ON DELETE CASCADE ,
+                           CONSTRAINT user_item_item FOREIGN KEY (item_id_cart) REFERENCES items(item_id) ON DELETE CASCADE
 );
