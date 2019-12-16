@@ -45,25 +45,22 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     if(isset($_POST['item_price'])){
         $item_price = $_POST['item_price'];
     }
-    if(isset($_POST['item_price'])){
-        $item_price = $_POST['item_price'];
-    }
-    if(isset($_POST['item_cat'])){
-        if($_POST['item_cat'] == 'Normálna')
+    if(isset($_POST['item_type'])){
+        if($_POST['item_type'] == 'Normálna')
             $item_cat = 'N';
-        else if($_POST['item_cat'] == 'Vegetariánska')
+        else if($_POST['item_type'] == 'Vegetariánska')
             $item_cat = 'W';
-        else if($_POST['item_cat'] == 'Vegánska')
+        else if($_POST['item_type'] == 'Vegánska')
             $item_cat = 'V';
-        else if($_POST['item_cat'] == 'Bezlepková')
+        else if($_POST['item_type'] == 'Bezlepková')
             $item_cat = 'G';
-        else if($_POST['item_cat'] == 'Nápoj')
+        else if($_POST['item_type'] == 'Nápoj')
             $item_cat = 'D';
     }
-    if(isset($_POST['item_type'])){
-        if($_POST['item_type'] == 'Denná ponuka')
+    if(isset($_POST['item_cat'])){
+        if($_POST['item_cat'] == 'Denná ponuka')
             $item_type = 'D';
-        else if($_POST['item_type'] == 'Stála ponuka')
+        else if($_POST['item_cat'] == 'Stála ponuka')
             $item_cat = 'O';
     };
     if(isset($_POST['item_limit'])){
@@ -116,4 +113,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
    }
 }
 
-header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/bussiness.php?keyword={$business_id}&attribute=ID+prevádzky");
+//header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/bussiness.php?keyword={$business_id}&attribute=ID+prevádzky");
