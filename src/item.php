@@ -113,4 +113,4 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
    }
 }
 
-//header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/bussiness.php?keyword={$business_id}&attribute=ID+prevádzky");
+header("Location: http://{$_SERVER['SERVER_NAME']}:{$_SERVER['SERVER_PORT']}/bussiness.php?keyword={$business_id}&attribute=ID+prevádzky");
