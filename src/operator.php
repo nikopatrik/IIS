@@ -37,7 +37,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
         $order_id= $_POST['order_id'];
     }
 
-    $postqry = $pdo->prepare("UPDATE orders SET order_driver=?, order_state=true WHERE order_id=?");
+    $postqry = $pdo->prepare("UPDATE orders SET order_driver=?, order_state=false WHERE order_id=?");
     $postqry->execute([$driver, $order_id]);
 
 }
@@ -175,7 +175,7 @@ include "navigation-bar.php";
 <div class="container">
     <?php
 
-    $orders = $pdo->prepare("SELECT order_id FROM orders WHERE order_state IS NOT TRUE OR order_owner IS NULL");
+    $orders = $pdo->prepare("SELECT order_id FROM orders WHERE order_driver IS NULL");
     $orders->execute();
     while($order = $orders->fetch()){
         $qry = $pdo->prepare("SELECT user_email FROM users WHERE user_type='D' or user_type='A'");
