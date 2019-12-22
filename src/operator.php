@@ -42,13 +42,23 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 }
 
-function print_order($order_id, $items, $drivers){
+function print_order($order, $items, $drivers){
+    if($order['order_driver'] == null){
+        $order_state = 'Potvrdená';
+    }
+    elseif ($order['order_state'] == false){
+        $order_state = 'Na ceste';
+    }
+    else {
+        $order_state = 'Doručená';
+    }
     $total_price = 0;
     echo "
     <div class=\"card m-5 shadow p-3 mb-5 bg-white rounded\">
         <div class=\"card-header\">
-            <div class=\"d-flex container justify-content-start\">
-               <h5 class=\"align-self-center mx-4\"> #".$order_id."</h5>
+            <div class=\"d-flex container justify-content-between\">
+               <h5 class=\"align-self-center mx-4\"> #".$order['order_id']."</h5>
+               <strong>$order_state</strong>
             </div>
         </div>
 
@@ -74,17 +84,17 @@ function print_order($order_id, $items, $drivers){
     echo "
             <div class=\"d-flex flex-column justify-content-between\">
                         <form class=\"form-inline align-self-end\" method='POST' action='operator.php'>
-                            <select class=\"custom-select\" name='driver'>";
+                            <select class=\"custom-select\" name='driver' >";
      foreach ($drivers as $driver)
          echo "<option>".$driver['user_email']."</option>";
 
     echo "
                             </select>";
-                            if(!$drivers)
+                            if(!$drivers or $order_state != 'Potvrdená')
                                 echo "<button disabled type=\"submit\" class=\"btn btn-primary mx-2\"> Priradiť vodiča</button>";
                             else
                                 echo "<button type=\"submit\" class=\"btn btn-primary mx-2\"> Priradiť vodiča</button>";
-                            echo "<input type=\"hidden\" id=\"order_id\" name=\"order_id\" value=\"".$order_id."\">
+                            echo "<input type=\"hidden\" id=\"order_id\" name=\"order_id\" value=\"".$order['order_id']."\">
                         </form>
                     </div>
         </div>
@@ -175,7 +185,7 @@ include "navigation-bar.php";
 <div class="container">
     <?php
 
-    $orders = $pdo->prepare("SELECT order_id FROM orders WHERE order_driver IS NULL");
+    $orders = $pdo->prepare("SELECT order_id, order_state, order_driver FROM orders WHERE order_driver IS NULL");
     $orders->execute();
     while($order = $orders->fetch()){
         $qry = $pdo->prepare("SELECT user_email FROM users WHERE user_type='D' or user_type='A'");
@@ -186,7 +196,26 @@ include "navigation-bar.php";
         $qry->execute([$order['order_id']]);
         $items = $qry->fetchAll();
 
-        print_order($order['order_id'], $items, $drivers);
+        print_order($order, $items, $drivers);
+    }
+
+    ?>
+</div>
+<hr>
+<div class="container">
+    <h1 class="display-7 text-center"> História </h1>
+    <?php
+
+    $orders = $pdo->prepare("SELECT order_id, order_state, order_driver FROM orders WHERE order_driver IS NOT NULL ORDER BY order_id DESC");
+    $orders->execute();
+    while($order = $orders->fetch()){
+        $qry = $pdo->prepare("SELECT item_name, item_price, number_of_items FROM items
+                              JOIN order_items oi on items.item_id = oi.item_in_order WHERE order_of_item=?");
+        $qry->execute([$order['order_id']]);
+        $items = $qry->fetchAll();
+        $driver = ['user_email' => $order['order_driver']];
+        $drivers = [$driver];
+        print_order($order, $items, $drivers);
     }
 
     ?>

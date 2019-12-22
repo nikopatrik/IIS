@@ -309,12 +309,24 @@ include "navigation-bar.php";
     $user_stmt = $pdo->prepare('SELECT * FROM orders WHERE order_owner=? ORDER BY order_date DESC');
     $user_stmt->execute([$useremail]);
     while($order = $user_stmt->fetch()){
+        if($order['order_driver'] == null){
+            $order_state = 'Potvrdená';
+        }
+        elseif ($order['order_state'] == false){
+            $order_state = 'Na ceste';
+        }
+        else {
+            $order_state = 'Doručená';
+        }
         echo "
                         <div class=\"card m-5 shadow p-3 mb-5 bg-white rounded\">
                             <div class=\"card-header\">
+                                <div class='d-flex container justify-content-between'>
                                 <div class=\"d-flex container justify-content-start\">
-                                   <img class=\"icon-size\" src=\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADh CAMAAAAJbSJIAAAAclBMVEUAAAD////q6upkZGTl5eXU1NRzc3Ojo6M3NzdcXFyKioqwsLDExMSfn5++vr7Q0NBOTk4nJycUFBTw8PAsLCw/Pz+Dg4P4+PhVVVVFRUV8fHwYGBiXl5cRERHc3NysrKwiIiJJSUlubm6Pj48zMzOZmZnYnRXIAAAECElEQVR4nO2abVuqQBBAletbSVpqoGlkWf//L153FmEXtYs+jNulc740DLvAMVeWZTodAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIDmWa+eXVbb0BfUOMuuz0voC2ocDP9/2m/4GEU9h/kg9AXBL2f34DCyuZGJdxK+7KPh0qZnm0O74dpm3of7jUTCzTSOpxIm7hEPQ/i+6LqyiafxnuFrfsL7JEm0Rnvk/qTMreKdxBLGJrSynX7ZMLKXNjBxv2w4rDTrdqe267jMpFZxJIfJP6mJ2XhTMux5v5rpc2EYlRd+b6JZ5jaMngrDaXmRx4ZxubPgsTScye5FajYWNzHspmcNY79h7wLDh8o51hXDxMR9JcGqYfesYd9vN7/AcOx3lf+Wayg91G5JYjgZ7nmrYSgNJzUMpeH+mElh2Jft9IThSv6xWoLW8M5EsxqGd8Xufxh+uOcQwy8TbecnDOWjHesa/jHRUw1DafinhqH3nRPDBxMtThlKbtViww8TZWqCP8BwWpyipYYy/NNtiw03JpjoCYY3lGnjXYsN5Wm7pygY3HBS7PtphulVhp+VOc1rxyRSvZvhdYaLwZ6PqwzXH6bvrDBUnnRfa1hysWFJbpgdNW6coIa9ZTGk9QhrqDzpFoIazuWn9bF5K5eghoLipFsIb6g46RbCGzbv5FMabps0PH7GP2cYN+/kI4aDxefnYnWlYfZilnP7vuGbSSaJXVb91lBvgSbHW2tL7bfrMkOHo7W2rTT7/lv6rKnXqRra4dOYYf5g+73hTlOvUzHMx8RtDbUHor8ibN8d3PZbqj0QHUPzICMzqMsM55M4jieRb9iPDRP75uWsYSoPUzeb0yxE00Q3u1tkss6mPBCV7oc1Z9678gBq8PSkahjZFX3NlbbghnL8TfNaDoEN7/UHYmDDZ/mzbt6rJKzhqx2IlcM2S1jDfEVYdSBeYTja7HY7yV2+Xrrvudm5lQoyEFUXTMOuec/sTGr+9AMNG3v3pH5HDG5Ydmyr4Yv2QAxuuJZRvW2xoVPR01ZD2atVmPgjDJ0SzjYYnqhrK5+8FQ1lFKxrGKrUtWVHHZo3tDX5vmFq6/R9Q6nhj2oYHor9x4WhzZyqTVStEP6mvtRBDDM/12B9qRS26RWcVAzlchde8Xc3lUr2SqHv5ALDyrKqvDB0DD+Lj/YGhvnT9tbNpnmp/teRYO06b0/RvhF1a4R1yxVOrep3OrMyfRD0FPNX755hmp417AzSIpPfF9xa/YdelvW+tAzfHx3K9OyQWjol9Ktqw+1yH1fLfVbuEQ8vlkbF8fLEq9l413ECAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgN/KX7+jVGXgR95gAAAAAElFTkSuQmCC\" />
+                                   <img class=\"icon-size\" src=\"img/default.jpg\" />
                                     <h5 class=\"align-self-center mx-4\"> ".date("j.n.Y",strtotime($order['order_date']))." ".date("H:i",strtotime($order['order_time']))." </h5>
+                                </div>
+                                <strong>".$order_state."</strong>
                                 </div>
                             </div>
         
@@ -336,7 +348,7 @@ include "navigation-bar.php";
 
         }
         echo "
-                            <li class=\"d-flex list-group-item justify-content-between\">
+                            <li class=\"d-flex list-group-item justify-content-between active\">
                                 <div>Spolu</div>
                                 <div>".$total_price." €"."</div>
                             </li>
