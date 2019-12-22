@@ -100,7 +100,7 @@ echo "
     ";
 
 if( $_SESSION['requested_type'] == 'all'){
-    $stmt = $pdo->prepare("SELECT * FROM items WHERE item_business=? AND item_category='D'");
+    $stmt = $pdo->prepare("SELECT * FROM items WHERE item_business=? AND item_category='D' AND item_limit > 0");
     $stmt->execute([$business['business_id']]);
 } else {
     $stmt = $pdo->prepare("SELECT * FROM items WHERE item_business=? AND item_type =? AND item_category='D'");
@@ -132,7 +132,10 @@ while ($item = $stmt->fetch()){
                     <p class=\"card-text\"><strong>".$item['item_price']." €</strong></p>
                 </div>
             </div>
-            <a href=\"shoppingcart.php?item_id=".$item['item_id']." \" class=\"btn btn-primary align-self-end\">Vybrať</a>
+            <div class='container d-flex flex-column justify-content-between'> 
+                <strong class='align-self-end'>Zostáva: " . $item['item_limit'] . " ks </strong>
+                <a href=\"shoppingcart.php?item_id=" . $item['item_id'] . " \" class=\"btn btn-primary align-self-end\">Vybrať</a>
+            </div>
         </div>
     </div>
 </div>

@@ -132,6 +132,18 @@ include "navigation-bar.php";
 foreach ($items as $item){
     $qry->execute([$number_of_order, $item['item_id_cart'], $item['cart_quantity']]);
 }
+
+$limits = $pdo->prepare("SELECT item_id, number_of_items FROM items JOIN order_items oi
+  on items.item_id = oi.item_in_order WHERE item_category='D' AND order_of_item=?");
+$limits->execute([$number_of_order]);
+while ($limit = $limits->fetch()){
+    $qry  = $pdo->prepare("SELECT item_limit FROM items WHERE item_id=?");
+    $qry->execute([$limit['item_id']]);
+    $item = $qry->fetch();
+    $new_quantity = $item['item_limit'] - $limit['number_of_items'];
+    $qry = $pdo->prepare("UPDATE items SET item_limit=? WHERE item_id=?");
+    $qry->execute([$new_quantity, $limit['item_id']]);
+}
 ?>
 
 <!-- Optional JavaScript -->
